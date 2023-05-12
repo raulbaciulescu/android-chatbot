@@ -1,22 +1,21 @@
 package com.university.androidchatbot.auth.data.remote
 
-import com.university.androidchatbot.core.data.Api
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import javax.inject.Inject
 
-class AuthDataSource() {
-    interface AuthService {
-        @Headers("Content-Type: application/json")
-        @POST("/api/auth/login")
-        suspend fun login(@Body user: User): TokenHolder
-    }
 
-    private val authService: AuthService = Api.retrofit.create(AuthService::class.java)
+interface AuthApi {
+    @Headers("Content-Type: application/json")
+    @POST("/auth/login")
+    suspend fun login(@Body loginRequest: LoginRequest): TokenHolder
+}
 
-    suspend fun login(user: User): Result<TokenHolder> {
+class AuthDataSource @Inject constructor(private val authApi: AuthApi) {
+    suspend fun login(loginRequest: LoginRequest): Result<TokenHolder> {
         return try {
-            Result.success(authService.login(user))
+            Result.success(authApi.login(loginRequest))
         } catch (e: Exception) {
             Result.failure(e)
         }

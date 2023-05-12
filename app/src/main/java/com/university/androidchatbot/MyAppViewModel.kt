@@ -9,9 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.university.androidchatbot.core.data.TAG
 import com.university.androidchatbot.core.data.UserPreferences
 import com.university.androidchatbot.core.data.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyAppViewModel(
+@HiltViewModel
+class MyAppViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
 ) :
     ViewModel() {
@@ -27,18 +30,6 @@ class MyAppViewModel(
     }
 
     fun setToken(token: String) {
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
-                MyAppViewModel(
-                    app.container.userPreferencesRepository,
-                )
-            }
-        }
     }
 }
 

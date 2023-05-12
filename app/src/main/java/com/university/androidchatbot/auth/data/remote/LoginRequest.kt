@@ -1,6 +1,6 @@
 package com.university.androidchatbot.auth.data.remote
 
-data class User(
-    val username: String,
+data class LoginRequest(
+    val email: String,
     val password: String
 )

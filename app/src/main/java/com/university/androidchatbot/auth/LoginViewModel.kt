@@ -13,7 +13,9 @@ import com.university.androidchatbot.MyApplication
 import com.university.androidchatbot.auth.data.AuthRepository
 import com.university.androidchatbot.core.data.UserPreferences
 import com.university.androidchatbot.core.data.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class LoginUiState(
     val isAuthenticating: Boolean = false,
@@ -22,7 +24,8 @@ data class LoginUiState(
     val token: String = ""
 )
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
@@ -49,19 +52,6 @@ class LoginViewModel(
                 uiState = uiState.copy(
                     isAuthenticating = false,
                     authenticationError = result.exceptionOrNull()
-                )
-            }
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
-                LoginViewModel(
-                    app.container.authRepository,
-                    app.container.userPreferencesRepository
                 )
             }
         }

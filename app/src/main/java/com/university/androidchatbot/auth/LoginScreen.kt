@@ -9,6 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.university.androidchatbot.R
 
@@ -16,7 +17,7 @@ val TAG = "LoginScreen"
 
 @Composable
 fun LoginScreen(onClose: () -> Unit) {
-    val loginViewModel = viewModel<LoginViewModel>(factory = LoginViewModel.Factory)
+    val loginViewModel = hiltViewModel<LoginViewModel>()
     val loginUiState = loginViewModel.uiState
 
     Scaffold(

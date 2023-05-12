@@ -13,9 +13,12 @@ import com.university.androidchatbot.MyApplication
 import com.university.androidchatbot.core.data.TAG
 import com.university.androidchatbot.core.data.UserPreferences
 import com.university.androidchatbot.core.data.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserPreferencesViewModel(private val userPreferencesRepository: UserPreferencesRepository) :
+@HiltViewModel
+class UserPreferencesViewModel @Inject constructor(private val userPreferencesRepository: UserPreferencesRepository) :
     ViewModel() {
     var uiState: UserPreferences by mutableStateOf(UserPreferences())
         private set
@@ -37,16 +40,6 @@ class UserPreferencesViewModel(private val userPreferencesRepository: UserPrefer
         viewModelScope.launch {
             Log.d(TAG, "saveUserPreferences...");
             userPreferencesRepository.save(userPreferences)
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
-                UserPreferencesViewModel(app.container.userPreferencesRepository)
-            }
         }
     }
 }
