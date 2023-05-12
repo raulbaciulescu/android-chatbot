@@ -11,15 +11,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import com.university.androidchatbot.R
-import com.university.androidchatbot.registerRoute
 
-val TAG = "LoginScreen"
 
 @Composable
-fun LoginScreen(onClose: () -> Unit, navController: NavController) {
+fun RegisterScreen(onClose: () -> Unit) {
     val loginViewModel = hiltViewModel<LoginViewModel>()
     val loginUiState = loginViewModel.uiState
 
@@ -31,11 +27,25 @@ fun LoginScreen(onClose: () -> Unit, navController: NavController) {
                 .fillMaxSize()
                 .padding(24.dp)
         ) {
-            var username by remember { mutableStateOf("") }
+            var firstName by remember { mutableStateOf("") }
             TextField(
-                label = { Text(text = "Username") },
-                value = username,
-                onValueChange = { username = it },
+                label = { Text(text = "First Name") },
+                value = firstName,
+                onValueChange = { firstName = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+            var lastName by remember { mutableStateOf("") }
+            TextField(
+                label = { Text(text = "Last Name") },
+                value = lastName,
+                onValueChange = { lastName = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+            var email by remember { mutableStateOf("") }
+            TextField(
+                label = { Text(text = "Email") },
+                value = email,
+                onValueChange = { email = it },
                 modifier = Modifier.fillMaxWidth()
             )
             var password by remember { mutableStateOf("") }
@@ -49,14 +59,9 @@ fun LoginScreen(onClose: () -> Unit, navController: NavController) {
             Log.d(TAG, "recompose");
             Button(onClick = {
                 Log.d(TAG, "login...");
-                loginViewModel.login(username, password)
+                loginViewModel.register(firstName, lastName, email, password)
             }) {
                 Text("Login")
-            }
-            Button(onClick = {
-                navController.navigate(registerRoute)
-            }) {
-                Text("Register")
             }
             if (loginUiState.isAuthenticating) {
                 LinearProgressIndicator(
@@ -78,9 +83,3 @@ fun LoginScreen(onClose: () -> Unit, navController: NavController) {
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun LoginScreenPreview() {
-//    LoginScreen({})
-//}

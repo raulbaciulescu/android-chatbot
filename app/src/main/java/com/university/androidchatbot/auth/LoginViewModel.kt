@@ -27,29 +27,47 @@ data class LoginUiState(
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
     var uiState: LoginUiState by mutableStateOf(LoginUiState())
-
-    init {
-        Log.d(TAG, "init")
-    }
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
             Log.v(TAG, "login...");
             uiState = uiState.copy(isAuthenticating = true, authenticationError = null)
             val result = authRepository.login(username, password)
-            if (result.isSuccess) {
+            uiState = if (result.isSuccess) {
                 userPreferencesRepository.save(
                     UserPreferences(
                         username,
                         result.getOrNull()?.token ?: ""
                     )
                 )
-                uiState = uiState.copy(isAuthenticating = false, authenticationCompleted = true)
+                uiState.copy(isAuthenticating = false, authenticationCompleted = true)
             } else {
-                uiState = uiState.copy(
+                uiState.copy(
+                    isAuthenticating = false,
+                    authenticationError = result.exceptionOrNull()
+                )
+            }
+        }
+    }
+
+    fun register(firstname: String, lastName: String, email: String, password: String) {
+        viewModelScope.launch {
+            Log.v(TAG, "register...");
+            uiState = uiState.copy(isAuthenticating = true, authenticationError = null)
+            val result = authRepository.register(firstname, lastName, email, password)
+            uiState = if (result.isSuccess) {
+                userPreferencesRepository.save(
+                    UserPreferences(
+                        email,
+                        result.getOrNull()?.token ?: ""
+                    )
+                )
+                uiState.copy(isAuthenticating = false, authenticationCompleted = true)
+            } else {
+                uiState.copy(
                     isAuthenticating = false,
                     authenticationError = result.exceptionOrNull()
                 )

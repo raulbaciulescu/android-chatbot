@@ -47,8 +47,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(authDataSource: AuthDataSource): AuthRepository {
-        return AuthRepository(authDataSource)
+    fun provideAuthRepository(authDataSource: AuthDataSource, tokenInterceptor: TokenInterceptor): AuthRepository {
+        return AuthRepository(authDataSource, tokenInterceptor)
     }
 
     @Provides
