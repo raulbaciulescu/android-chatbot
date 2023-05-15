@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.university.androidchatbot.MyApplication
 import com.university.androidchatbot.core.data.TAG
+import com.university.androidchatbot.core.data.TokenInterceptor
 import com.university.androidchatbot.core.data.UserPreferences
 import com.university.androidchatbot.core.data.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserPreferencesViewModel @Inject constructor(private val userPreferencesRepository: UserPreferencesRepository) :
+class UserPreferencesViewModel @Inject constructor(
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val tokenInterceptor: TokenInterceptor
+) :
     ViewModel() {
     var uiState: UserPreferences by mutableStateOf(UserPreferences())
         private set
@@ -35,6 +39,10 @@ class UserPreferencesViewModel @Inject constructor(private val userPreferencesRe
             }
         }
     }
+
+//    fun setToken() {
+//        tokenInterceptor.
+//    }
 
     fun save(userPreferences: UserPreferences) {
         viewModelScope.launch {

@@ -11,10 +11,6 @@ import javax.inject.Inject
 
 
 class AuthRepository @Inject constructor(private val authDataSource: AuthDataSource, private val tokenInterceptor: TokenInterceptor) {
-    fun clearToken() {
-        //Api.tokenInterceptor.token = null
-    }
-
     suspend fun login(email: String, password: String): Result<TokenHolder> {
         val loginRequest = LoginRequest(email, password)
         val result = authDataSource.login(loginRequest)

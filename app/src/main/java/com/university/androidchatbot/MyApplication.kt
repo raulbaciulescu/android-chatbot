@@ -21,20 +21,5 @@ import android.util.Log
 import com.university.androidchatbot.core.data.TAG
 import dagger.hilt.android.HiltAndroidApp
 
-//class MyApplication : Application() {
-//    lateinit var container: AppContainer
-//    private var sInstance: MyApplication? = null
-//
-//    override fun onCreate() {
-//        super.onCreate()
-//        Log.d(TAG, "init")
-//        container = AppContainer(this)
-//        sInstance = this;
-//    }
-//
-//    fun getInstance(context: Context): MyApplication {
-//        return context.applicationContext as MyApplication
-//    }
-//}
 @HiltAndroidApp
 class MyApplication: Application()

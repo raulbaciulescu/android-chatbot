@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.university.androidchatbot.core.data.TAG
+import com.university.androidchatbot.core.data.TokenInterceptor
 import com.university.androidchatbot.core.data.UserPreferences
 import com.university.androidchatbot.core.data.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,12 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MyAppViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
-) :
-    ViewModel() {
-
-    init {
-        Log.d(TAG, "init")
-    }
+    private val tokenInterceptor: TokenInterceptor,
+) : ViewModel() {
+    val chatId: Int = 4
 
     fun logout() {
         viewModelScope.launch {
@@ -30,6 +28,7 @@ class MyAppViewModel @Inject constructor(
     }
 
     fun setToken(token: String) {
+        tokenInterceptor.token = token
     }
 }
 
