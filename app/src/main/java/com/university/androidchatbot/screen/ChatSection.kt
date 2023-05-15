@@ -1,10 +1,9 @@
-package com.university.androidchatbot.todo
+package com.university.androidchatbot.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,20 +22,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.university.androidchatbot.data.MessageType
+import com.university.androidchatbot.viewmodel.MessageUiState
+import com.university.androidchatbot.viewmodel.MessageViewModel
 
 @Composable
 fun ChatSection(
     modifier: Modifier = Modifier,
-    messages: List<Message>
 ) {
     val listState = rememberLazyListState()
-    val chatViewModel = hiltViewModel<ChatViewModel>()
-    val uiState = chatViewModel.uiState
-    val messageUiState = chatViewModel.messageUiState
+    val messageViewModel = hiltViewModel<MessageViewModel>()
 
-    when (uiState) {
-        is ChatUiState.Success ->
+    when (val uiState = messageViewModel.uiState) {
+        is MessageUiState.Success ->
             LazyColumn(
                 state = listState,
                 modifier = modifier
@@ -50,14 +48,14 @@ fun ChatSection(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-        is ChatUiState.Loading -> CircularProgressIndicator()
-        is ChatUiState.Error -> Text(text = "Failed to load items - ${uiState.exception?.message}")
+        is MessageUiState.Loading -> CircularProgressIndicator()
+        is MessageUiState.Error -> Text(text = "Failed to load items - ${uiState.exception?.message}")
     }
 
 
-    LaunchedEffect(chatViewModel.messages) {
+    LaunchedEffect(messageViewModel.messages) {
         println("saved!!!")
-        listState.scrollToItem(if (chatViewModel.messages.isNotEmpty()) chatViewModel.messages.size - 1 else 0)
+        listState.scrollToItem(if (messageViewModel.messages.isNotEmpty()) messageViewModel.messages.size - 1 else 0)
     }
 }
 

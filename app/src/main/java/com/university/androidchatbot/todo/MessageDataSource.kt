@@ -1,5 +1,7 @@
 package com.university.androidchatbot.todo
 
+import com.university.androidchatbot.data.Chat
+import com.university.androidchatbot.data.Message
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -35,11 +37,7 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
         return messageApi.getMessages(chatId)
     }
 
-    suspend fun getChats(): Result<List<Chat>> {
-        return try {
-            Result.success(messageApi.getChats())
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun getChats(): List<Chat> {
+        return messageApi.getChats()
     }
 }

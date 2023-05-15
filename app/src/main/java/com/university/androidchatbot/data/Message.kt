@@ -1,4 +1,4 @@
-package com.university.androidchatbot.todo
+package com.university.androidchatbot.data
 
 enum class MessageType {
     USER, AI

@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import com.university.androidchatbot.todo.MenuItem
+import com.university.androidchatbot.data.MenuItem
 
 object Utils {
     val menuItems = listOf(

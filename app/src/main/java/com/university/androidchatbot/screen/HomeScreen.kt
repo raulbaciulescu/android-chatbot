@@ -1,21 +1,15 @@
-package com.university.androidchatbot.todo
+package com.university.androidchatbot.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,13 +20,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.university.androidchatbot.Utils
+import com.university.androidchatbot.data.Chat
+import com.university.androidchatbot.todo.AppBar
+import com.university.androidchatbot.viewmodel.ChatViewModel
 
 @Composable
-fun HomeScreen(chatId: Int, navController: NavController) {
+fun HomeScreen(chatId: Int, navigate: (chatId: Int) -> Unit) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val chatViewModel = hiltViewModel<ChatViewModel>()
+    val uiState = chatViewModel.uiState
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -49,9 +49,9 @@ fun HomeScreen(chatId: Int, navController: NavController) {
         drawerContent = {
             DrawerHeader()
             DrawerBody(
-                items = Utils.menuItems,
+                items = chatViewModel.chats,
                 onItemClick = {
-                    println("Clicked on ${it.title}")
+                    navigate(it.id)
                 }
             )
         }
@@ -65,19 +65,21 @@ fun DrawerHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 64.dp),
+            .padding(vertical = 30.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Header", fontSize = 60.sp)
+        Button(onClick = {}) {
+            Text("New chat")
+        }
     }
 }
 
 @Composable
 fun DrawerBody(
-    items: List<MenuItem>,
+    items: List<Chat>,
     modifier: Modifier = Modifier,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-    onItemClick: (MenuItem) -> Unit
+    onItemClick: (Chat) -> Unit
 ) {
     LazyColumn(modifier) {
         items(items) { item ->
@@ -89,16 +91,12 @@ fun DrawerBody(
                     }
                     .padding(16.dp)
             ) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = item.contentDescription
-                )
-                Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = item.title,
                     style = itemTextStyle,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(16.dp))
             }
         }
     }

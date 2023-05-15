@@ -1,4 +1,4 @@
-package com.university.androidchatbot.todo
+package com.university.androidchatbot.data
 
 data class Chat(
     val id: Int,

@@ -1,6 +1,8 @@
 package com.university.androidchatbot
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -19,7 +21,7 @@ class MyAppViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val tokenInterceptor: TokenInterceptor,
 ) : ViewModel() {
-    val chatId: Int = 4
+    var chatId = mutableStateOf(4)
 
     fun logout() {
         viewModelScope.launch {
