@@ -66,8 +66,13 @@ class MessageViewModel @Inject constructor(
     }
 
     fun addMessage(text: String) {
-        _messages.add(Message(text = text, type = MessageType.USER))
+        val message = Message(text = text, type = MessageType.USER)
+        var receivedMessage: Message
+        _messages.add(message)
         uiState = MessageUiState.Success(_messages)
-        _messages.add(Message(text = "response", type = MessageType.AI))
+        viewModelScope.launch {
+            receivedMessage = messageRepository.sendMessage(message)
+            _messages.add(receivedMessage)
+        }
     }
 }

@@ -13,4 +13,8 @@ class MessageRepository @Inject constructor(private val messageDataSource: Messa
     suspend fun getChats(): List<Chat> {
         return messageDataSource.getChats()
     }
+
+    suspend fun sendMessage(message: Message): Message {
+        return messageDataSource.sendMessage(message)
+    }
 }

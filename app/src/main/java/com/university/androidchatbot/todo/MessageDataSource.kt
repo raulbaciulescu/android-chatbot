@@ -25,12 +25,8 @@ interface MessageApi {
 }
 
 class MessageDataSource @Inject constructor(private val messageApi: MessageApi) {
-    suspend fun saveMessage(message: Message): Result<Message> {
-        return try {
-            Result.success(messageApi.saveMessage(message))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun sendMessage(message: Message): Message {
+        return messageApi.saveMessage(message)
     }
 
     suspend fun getMessages(chatId: Int): List<Message> {

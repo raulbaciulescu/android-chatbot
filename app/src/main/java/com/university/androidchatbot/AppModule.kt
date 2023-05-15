@@ -18,6 +18,8 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 val Context.userPreferencesDataStore by preferencesDataStore(
@@ -40,7 +42,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMessageApi(okHttpClient: OkHttpClient, gsonFactory: GsonConverterFactory): MessageApi {
+    fun provideMessageApi(
+        okHttpClient: OkHttpClient,
+        gsonFactory: GsonConverterFactory
+    ): MessageApi {
         return Retrofit.Builder()
             .baseUrl("http://192.168.0.102:8080/")
             .client(okHttpClient)
@@ -63,7 +68,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(authDataSource: AuthDataSource, tokenInterceptor: TokenInterceptor): AuthRepository {
+    fun provideAuthRepository(
+        authDataSource: AuthDataSource,
+        tokenInterceptor: TokenInterceptor
+    ): AuthRepository {
         return AuthRepository(authDataSource, tokenInterceptor)
     }
 
@@ -91,8 +99,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(tokenInterceptor: TokenInterceptor): OkHttpClient {
-        return OkHttpClient.Builder().apply {
-            this.addInterceptor(tokenInterceptor)
-        }.build()
+        return OkHttpClient.Builder()
+            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .apply {
+                this.addInterceptor(tokenInterceptor)
+            }.build()
     }
 }

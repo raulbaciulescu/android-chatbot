@@ -72,14 +72,3 @@ fun MyAppNavHost() {
         }
     }
 }
-
-
-@Composable
-fun Home() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.onSurface
-    ) {
-        Text(text = "Hello!")
-    }
-}
