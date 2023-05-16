@@ -21,17 +21,6 @@ sealed interface MessageUiState {
     object Loading : MessageUiState
 }
 
-//data class MessageUiState(
-//    val isLoading: Boolean = false,
-//    val loadingError: Throwable? = null,
-//    val itemId: String? = null,
-//    val item: Message? = null,
-//    val isSaving: Boolean = false,
-//    val savingCompleted: Boolean = false,
-//    val savingError: Throwable? = null,
-//)
-
-
 @HiltViewModel
 class MessageViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
@@ -44,27 +33,19 @@ class MessageViewModel @Inject constructor(
     var uiState: MessageUiState by mutableStateOf(MessageUiState.Loading)
         private set
 
-
-    init {
-//        viewModelScope.launch {
-//            uiState = MessageUiState.Loading
-//            val result = messageRepository.getMessages(4)
-//            _messages = result.toMutableStateList()
-//            uiState = MessageUiState.Success(result)
-//        }
-    }
-
     fun getMessagesByChat(chatId: Int) {
         viewModelScope.launch {
             uiState = MessageUiState.Loading
-            val result = messageRepository.getMessages(chatId)
+            var result: List<Message> = listOf()
+            if (chatId != 0)
+                result = messageRepository.getMessages(chatId)
             _messages = result.toMutableStateList()
             uiState = MessageUiState.Success(result)
         }
     }
 
-    fun addMessage(text: String) {
-        val message = Message(text = text, type = MessageType.USER)
+    fun addMessage(text: String, chatId: Int) {
+        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
         var receivedMessage: Message
         _messages.add(message)
         uiState = MessageUiState.Success(_messages)

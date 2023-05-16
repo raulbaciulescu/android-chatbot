@@ -13,6 +13,7 @@ import com.university.androidchatbot.screen.LoginScreen
 import com.university.androidchatbot.screen.RegisterScreen
 import com.university.androidchatbot.viewmodel.UserPreferencesViewModel
 import com.university.androidchatbot.screen.HomeScreen
+import com.university.androidchatbot.viewmodel.MyAppViewModel
 
 
 const val loginRoute = "auth"
@@ -49,17 +50,31 @@ fun MyAppNavHost() {
                 },
             )
         }
-        composable(route = "chat/{chatId}", arguments = listOf(navArgument("chatId") { type = NavType.IntType }))
+        composable(
+            route = "chat/{chatId}",
+            arguments = listOf(navArgument("chatId") { type = NavType.IntType })
+        )
         {
-            HomeScreen(chatId.value, navigate = { chatId ->
-                myAppViewModel.chatId.value = chatId
-                navController.navigate("chat/$chatId") })
+            HomeScreen(
+                chatId = chatId.value,
+                navigate = { chatId ->
+                    myAppViewModel.chatId.value = chatId
+                    navController.navigate("chat/$chatId")
+                },
+                onNewChatClick = {
+                    myAppViewModel.chatId.value = 0
+                    navController.navigate("chat/0")
+                }
+            )
         }
     }
 
     LaunchedEffect(userPreferencesUiState.token) {
         if (userPreferencesUiState.token.isNotEmpty()) {
-            Log.d("MyAppNavHost", "Launched effect navigate to items "+ userPreferencesUiState.token)
+            Log.d(
+                "MyAppNavHost",
+                "Launched effect navigate to items " + userPreferencesUiState.token
+            )
             myAppViewModel.setToken(userPreferencesUiState.token)
             navController.navigate("chat/${chatId.value}") {
                 popUpTo(0)

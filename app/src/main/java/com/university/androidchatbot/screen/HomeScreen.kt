@@ -27,11 +27,14 @@ import com.university.androidchatbot.todo.AudioRecorderImpl
 import com.university.androidchatbot.viewmodel.ChatViewModel
 
 @Composable
-fun HomeScreen(chatId: Int, navigate: (chatId: Int) -> Unit) {
+fun HomeScreen(
+    chatId: Int,
+    navigate: (chatId: Int) -> Unit,
+    onNewChatClick: () -> Unit
+) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val chatViewModel = hiltViewModel<ChatViewModel>()
-    val uiState = chatViewModel.uiState
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -39,6 +42,7 @@ fun HomeScreen(chatId: Int, navigate: (chatId: Int) -> Unit) {
             AppBar(
                 onNavigationIconClick = {
                     scope.launch {
+                        chatViewModel.refreshChats()
                         scaffoldState.drawerState.open()
                     }
                 }
@@ -46,7 +50,7 @@ fun HomeScreen(chatId: Int, navigate: (chatId: Int) -> Unit) {
         },
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
         drawerContent = {
-            DrawerHeader()
+            DrawerHeader(onNewChatClick = onNewChatClick)
             DrawerBody(
                 items = chatViewModel.chats,
                 onItemClick = {
@@ -56,47 +60,5 @@ fun HomeScreen(chatId: Int, navigate: (chatId: Int) -> Unit) {
         }
     ) {
         ChatScreen(chatId)
-    }
-}
-
-@Composable
-fun DrawerHeader() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 30.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Button(onClick = {}) {
-            Text("New chat")
-        }
-    }
-}
-
-@Composable
-fun DrawerBody(
-    items: List<Chat>,
-    modifier: Modifier = Modifier,
-    itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-    onItemClick: (Chat) -> Unit
-) {
-    LazyColumn(modifier) {
-        items(items) { item ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onItemClick(item)
-                    }
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = item.title,
-                    style = itemTextStyle,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-            }
-        }
     }
 }

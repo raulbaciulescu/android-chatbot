@@ -16,7 +16,7 @@ fun ChatScreen(chatId: Int) {
         ChatSection(Modifier.weight(1f))
         MessageSection(
             onSendMessage = { text ->
-                messageViewModel.addMessage(text)
+                messageViewModel.addMessage(text, chatId)
             },
             audioRecorder = messageViewModel.audioRecorder
         )

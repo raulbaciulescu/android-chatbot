@@ -24,6 +24,15 @@ sealed interface ChatUiState {
 class ChatViewModel @Inject constructor(
     private val messageRepository: MessageRepository
 ) : ViewModel() {
+    fun refreshChats() {
+        viewModelScope.launch {
+            uiState = ChatUiState.Loading
+            val result = messageRepository.getChats()
+            _chats = result.toMutableStateList()
+            uiState = ChatUiState.Success(result)
+        }
+    }
+
     private var _chats = mutableStateListOf<Chat>()
     val chats: List<Chat>
         get() = _chats.toList()

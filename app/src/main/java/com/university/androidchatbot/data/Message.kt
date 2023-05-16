@@ -7,5 +7,5 @@ enum class MessageType {
 data class Message(
     val text: String,
     var type: MessageType = MessageType.USER,
-    var chatId: Int = 4
+    var chatId: Int
 )

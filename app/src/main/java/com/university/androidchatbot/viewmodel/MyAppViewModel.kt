@@ -1,4 +1,4 @@
-package com.university.androidchatbot
+package com.university.androidchatbot.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
