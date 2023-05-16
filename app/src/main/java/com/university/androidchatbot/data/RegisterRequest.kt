@@ -1,4 +1,4 @@
-package com.university.androidchatbot.auth.data.remote
+package com.university.androidchatbot.data
 
 data class RegisterRequest(
     val firstName: String,

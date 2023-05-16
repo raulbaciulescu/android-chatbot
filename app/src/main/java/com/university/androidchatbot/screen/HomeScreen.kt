@@ -22,9 +22,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.university.androidchatbot.data.Chat
-import com.university.androidchatbot.todo.AppBar
+import com.university.androidchatbot.todo.AudioRecorderImpl
 import com.university.androidchatbot.viewmodel.ChatViewModel
 
 @Composable

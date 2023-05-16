@@ -1,4 +1,4 @@
-package com.university.androidchatbot.auth
+package com.university.androidchatbot.screen
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -7,15 +7,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.university.androidchatbot.R
+import com.university.androidchatbot.registerRoute
+import com.university.androidchatbot.viewmodel.LoginViewModel
 
+val TAG = "LoginScreen"
 
 @Composable
-fun RegisterScreen(onClose: () -> Unit) {
+fun LoginScreen(onClose: () -> Unit, navController: NavController) {
     val loginViewModel = hiltViewModel<LoginViewModel>()
     val loginUiState = loginViewModel.uiState
 
@@ -27,25 +29,11 @@ fun RegisterScreen(onClose: () -> Unit) {
                 .fillMaxSize()
                 .padding(24.dp)
         ) {
-            var firstName by remember { mutableStateOf("") }
+            var username by remember { mutableStateOf("") }
             TextField(
-                label = { Text(text = "First Name") },
-                value = firstName,
-                onValueChange = { firstName = it },
-                modifier = Modifier.fillMaxWidth()
-            )
-            var lastName by remember { mutableStateOf("") }
-            TextField(
-                label = { Text(text = "Last Name") },
-                value = lastName,
-                onValueChange = { lastName = it },
-                modifier = Modifier.fillMaxWidth()
-            )
-            var email by remember { mutableStateOf("") }
-            TextField(
-                label = { Text(text = "Email") },
-                value = email,
-                onValueChange = { email = it },
+                label = { Text(text = "Username") },
+                value = username,
+                onValueChange = { username = it },
                 modifier = Modifier.fillMaxWidth()
             )
             var password by remember { mutableStateOf("") }
@@ -59,9 +47,14 @@ fun RegisterScreen(onClose: () -> Unit) {
             Log.d(TAG, "recompose");
             Button(onClick = {
                 Log.d(TAG, "login...");
-                loginViewModel.register(firstName, lastName, email, password)
+                loginViewModel.login(username, password)
             }) {
                 Text("Login")
+            }
+            Button(onClick = {
+                navController.navigate(registerRoute)
+            }) {
+                Text("Register")
             }
             if (loginUiState.isAuthenticating) {
                 LinearProgressIndicator(
@@ -83,3 +76,9 @@ fun RegisterScreen(onClose: () -> Unit) {
         }
     }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    LoginScreen({})
+//}

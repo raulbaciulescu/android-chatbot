@@ -14,9 +14,12 @@ fun ChatScreen(chatId: Int) {
 
     Column {
         ChatSection(Modifier.weight(1f))
-        MessageSection(onSendMessage = { text ->
-            messageViewModel.addMessage(text)
-        })
+        MessageSection(
+            onSendMessage = { text ->
+                messageViewModel.addMessage(text)
+            },
+            audioRecorder = messageViewModel.audioRecorder
+        )
     }
 
     LaunchedEffect(true) {

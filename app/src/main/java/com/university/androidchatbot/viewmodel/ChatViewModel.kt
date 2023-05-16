@@ -8,7 +8,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.university.androidchatbot.data.Chat
-import com.university.androidchatbot.todo.MessageRepository
+import com.university.androidchatbot.repository.MessageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

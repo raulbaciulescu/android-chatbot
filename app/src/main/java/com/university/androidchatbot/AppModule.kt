@@ -4,13 +4,13 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.GsonBuilder
-import com.university.androidchatbot.auth.data.AuthRepository
-import com.university.androidchatbot.auth.data.remote.AuthApi
-import com.university.androidchatbot.auth.data.remote.AuthDataSource
+import com.university.androidchatbot.repository.AuthRepository
+import com.university.androidchatbot.api.AuthApi
+import com.university.androidchatbot.api.AuthDataSource
 import com.university.androidchatbot.core.data.TokenInterceptor
-import com.university.androidchatbot.core.data.UserPreferencesRepository
-import com.university.androidchatbot.todo.MessageApi
-import com.university.androidchatbot.todo.MessageDataSource
+import com.university.androidchatbot.repository.UserPreferencesRepository
+import com.university.androidchatbot.api.MessageApi
+import com.university.androidchatbot.api.MessageDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,13 +18,15 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 val Context.userPreferencesDataStore by preferencesDataStore(
     name = "user_preferences"
 )
+
+//const val IP = "192.168.0.129"
+const val IP = "192.168.98.154"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,7 +35,7 @@ object AppModule {
     @Singleton
     fun provideAuthApi(okHttpClient: OkHttpClient, gsonFactory: GsonConverterFactory): AuthApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.0.102:8080/")
+            .baseUrl("http://$IP:8080/")
             .client(okHttpClient)
             .addConverterFactory(gsonFactory)
             .build()
@@ -47,7 +49,7 @@ object AppModule {
         gsonFactory: GsonConverterFactory
     ): MessageApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.0.102:8080/")
+            .baseUrl("http://$IP:8080/")
             .client(okHttpClient)
             .addConverterFactory(gsonFactory)
             .build()

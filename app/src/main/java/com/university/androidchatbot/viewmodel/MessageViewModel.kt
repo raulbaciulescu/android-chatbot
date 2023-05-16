@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.university.androidchatbot.data.Message
 import com.university.androidchatbot.data.MessageType
-import com.university.androidchatbot.todo.MessageRepository
+import com.university.androidchatbot.repository.MessageRepository
+import com.university.androidchatbot.todo.AudioRecorderImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,7 +34,8 @@ sealed interface MessageUiState {
 
 @HiltViewModel
 class MessageViewModel @Inject constructor(
-    private val messageRepository: MessageRepository
+    private val messageRepository: MessageRepository,
+    val audioRecorder: AudioRecorderImpl
 ) : ViewModel() {
     private var _messages = mutableStateListOf<Message>()
     val messages: List<Message>
@@ -41,10 +43,6 @@ class MessageViewModel @Inject constructor(
 
     var uiState: MessageUiState by mutableStateOf(MessageUiState.Loading)
         private set
-//    var messageUiState: MessageUiState by mutableStateOf(MessageUiState(isLoading = true))
-//        private set
-
-
 
 
     init {

@@ -1,22 +1,17 @@
 package com.university.androidchatbot
 
 import android.util.Log
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.university.androidchatbot.auth.LoginScreen
-import com.university.androidchatbot.auth.RegisterScreen
-import com.university.androidchatbot.core.ui.UserPreferencesViewModel
+import com.university.androidchatbot.screen.LoginScreen
+import com.university.androidchatbot.screen.RegisterScreen
+import com.university.androidchatbot.viewmodel.UserPreferencesViewModel
 import com.university.androidchatbot.screen.HomeScreen
 
 

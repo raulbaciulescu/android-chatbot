@@ -1,11 +1,9 @@
-package com.university.androidchatbot.auth.data
+package com.university.androidchatbot.repository
 
-import android.util.Log
-import com.university.androidchatbot.auth.data.remote.AuthDataSource
-import com.university.androidchatbot.auth.data.remote.TokenHolder
-import com.university.androidchatbot.auth.data.remote.LoginRequest
-import com.university.androidchatbot.auth.data.remote.RegisterRequest
-import com.university.androidchatbot.core.data.TAG
+import com.university.androidchatbot.api.AuthDataSource
+import com.university.androidchatbot.data.TokenHolder
+import com.university.androidchatbot.data.LoginRequest
+import com.university.androidchatbot.data.RegisterRequest
 import com.university.androidchatbot.core.data.TokenInterceptor
 import javax.inject.Inject
 

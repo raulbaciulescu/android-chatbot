@@ -1,4 +1,4 @@
-package com.university.androidchatbot.todo
+package com.university.androidchatbot.api
 
 import com.university.androidchatbot.data.Chat
 import com.university.androidchatbot.data.Message
@@ -30,7 +30,12 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
     }
 
     suspend fun getMessages(chatId: Int): List<Message> {
-        return messageApi.getMessages(chatId)
+        return try {
+            messageApi.getMessages(chatId)
+        } catch (e: Exception) {
+            listOf()
+        }
+
     }
 
     suspend fun getChats(): List<Chat> {

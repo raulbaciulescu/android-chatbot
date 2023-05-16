@@ -1,18 +1,15 @@
-package com.university.androidchatbot.auth
+package com.university.androidchatbot.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.university.androidchatbot.MyApplication
-import com.university.androidchatbot.auth.data.AuthRepository
+import com.university.androidchatbot.screen.TAG
+import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.core.data.UserPreferences
-import com.university.androidchatbot.core.data.UserPreferencesRepository
+import com.university.androidchatbot.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
