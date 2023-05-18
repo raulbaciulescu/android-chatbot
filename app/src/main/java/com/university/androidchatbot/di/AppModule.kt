@@ -1,4 +1,4 @@
-package com.university.androidchatbot
+package com.university.androidchatbot.di
 
 import android.app.Application
 import android.content.Context
@@ -11,6 +11,8 @@ import com.university.androidchatbot.core.data.TokenInterceptor
 import com.university.androidchatbot.repository.UserPreferencesRepository
 import com.university.androidchatbot.api.MessageApi
 import com.university.androidchatbot.api.MessageDataSource
+import com.university.androidchatbot.api.SpeechRecognitionApi
+import com.university.androidchatbot.api.SpeechRecognitionDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,8 +27,9 @@ val Context.userPreferencesDataStore by preferencesDataStore(
     name = "user_preferences"
 )
 
-//const val IP = "192.168.0.129"
-const val IP = "192.168.98.154"
+const val IP = "192.168.0.129"
+//const val IP = "192.168.132.154"
+//const val IP = "192.168.100.24"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -54,6 +57,23 @@ object AppModule {
             .addConverterFactory(gsonFactory)
             .build()
             .create(MessageApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSpeechRecognitionApi(okHttpClient: OkHttpClient, gsonFactory: GsonConverterFactory): SpeechRecognitionApi {
+        return Retrofit.Builder()
+            .baseUrl("http://$IP:5000/")
+            .client(okHttpClient)
+            .addConverterFactory(gsonFactory)
+            .build()
+            .create(SpeechRecognitionApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSpeechRecognitionDataSource(speechRecognitionApi: SpeechRecognitionApi): SpeechRecognitionDataSource {
+        return SpeechRecognitionDataSource(speechRecognitionApi)
     }
 
     @Provides
@@ -102,8 +122,8 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(tokenInterceptor: TokenInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
             .apply {
                 this.addInterceptor(tokenInterceptor)
             }.build()

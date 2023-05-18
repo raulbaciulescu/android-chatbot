@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.university.androidchatbot.core.data.TAG
 import com.university.androidchatbot.core.data.TokenInterceptor
-import com.university.androidchatbot.core.data.UserPreferences
+import com.university.androidchatbot.data.UserPreferences
 import com.university.androidchatbot.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

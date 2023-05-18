@@ -9,16 +9,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.viewmodel.MessageViewModel
 
 @Composable
-fun ChatScreen(chatId: Int) {
-    val messageViewModel = hiltViewModel<MessageViewModel>()
-
+fun ChatScreen(
+    chatId: Int,
+    messageViewModel: MessageViewModel = hiltViewModel()
+) {
     Column {
         ChatSection(Modifier.weight(1f))
         MessageSection(
             onSendMessage = { text ->
                 messageViewModel.addMessage(text, chatId)
-            },
-            audioRecorder = messageViewModel.audioRecorder
+            }
         )
     }
 

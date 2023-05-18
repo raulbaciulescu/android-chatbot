@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.university.androidchatbot.core.data.TAG
-import com.university.androidchatbot.core.data.UserPreferences
+import com.university.androidchatbot.data.UserPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -18,10 +18,6 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
     private object PreferencesKeys {
         val username = stringPreferencesKey("username")
         val token = stringPreferencesKey("token")
-    }
-
-    init {
-        Log.d(TAG, "init")
     }
 
     val userPreferencesStream: Flow<UserPreferences> = dataStore.data

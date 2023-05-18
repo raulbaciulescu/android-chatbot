@@ -48,6 +48,7 @@ fun MyAppNavHost() {
                     Log.d("MyAppNavHost", "navigate to list")
                     navController.navigate("chat/${chatId.value}")
                 },
+                navController = navController
             )
         }
         composable(

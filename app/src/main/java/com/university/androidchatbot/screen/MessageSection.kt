@@ -13,34 +13,40 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.R
-import com.university.androidchatbot.screen.message
-import com.university.androidchatbot.todo.AudioRecorderImpl
+import java.io.File
+import com.university.androidchatbot.viewmodel.MessageViewModel
+import com.university.androidchatbot.viewmodel.SpeechRecognitionViewModel
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageSection(
     onSendMessage: (String) -> Unit,
-    audioRecorder: AudioRecorderImpl
+    messageViewModel: MessageViewModel = hiltViewModel(),
+    speechRecognitionViewModel: SpeechRecognitionViewModel = hiltViewModel()
 ) {
     val isTyping = remember { mutableStateOf(false) }
+    val isSpeaking = remember { mutableStateOf(false) }
+    var audioFile: File? = null
+
+    val waveRecorder = speechRecognitionViewModel.waveRecorder
 
     Card(
         modifier = Modifier.fillMaxWidth(),
     ) {
         OutlinedTextField(
             placeholder = { Text("Type a message...") },
-            value = message.value,
+            value = speechRecognitionViewModel.message,
             onValueChange = {
-                message.value = it
-                isTyping.value = message.value != ""
+                speechRecognitionViewModel.message = it
+                isTyping.value = speechRecognitionViewModel.message != ""
             },
             shape = RoundedCornerShape(25.dp),
             trailingIcon = {
@@ -51,8 +57,8 @@ fun MessageSection(
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .clickable {
-                                onSendMessage(message.value)
-                                message.value = ""
+                                onSendMessage(speechRecognitionViewModel.message)
+                                speechRecognitionViewModel.message = ""
                             }
                             .size(25.dp))
                 } else {
@@ -62,10 +68,19 @@ fun MessageSection(
                         tint = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .combinedClickable(
-                                onClick = { println("click") },
+                                onClick = {
+                                    if (!isSpeaking.value) {
+                                        isSpeaking.value = true
+                                        waveRecorder.startRecording()
+                                    } else {
+                                        waveRecorder.stopRecording()
+                                        speechRecognitionViewModel.transcribe()
+                                    }
+                                },
                                 onLongClick = { println("yes") },
                             )
-                            .size(25.dp))
+                            .size(25.dp)
+                    )
                 }
             },
             modifier = Modifier
@@ -74,8 +89,4 @@ fun MessageSection(
 
         )
     }
-}
-
-fun startRegister() {
-
 }

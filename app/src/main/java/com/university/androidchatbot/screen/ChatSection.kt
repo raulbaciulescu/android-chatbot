@@ -4,9 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.data.MessageType
 import com.university.androidchatbot.viewmodel.MessageUiState
 import com.university.androidchatbot.viewmodel.MessageViewModel
+import kotlin.math.min
 
 @Composable
 fun ChatSection(
@@ -48,26 +51,24 @@ fun ChatSection(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-        is MessageUiState.Loading -> CircularProgressIndicator()
+
+        is MessageUiState.Loading -> LoadingAnimation()
         is MessageUiState.Error -> Text(text = "Failed to load items - ${uiState.exception?.message}")
     }
 
 
     LaunchedEffect(messageViewModel.messages) {
-        println("saved!!!")
         listState.scrollToItem(if (messageViewModel.messages.isNotEmpty()) messageViewModel.messages.size - 1 else 0)
     }
 }
 
-private val BotChatBubbleShape = RoundedCornerShape(0.dp, 0.dp, 8.dp, 8.dp)
-private val AuthorChatBubbleShape = RoundedCornerShape(8.dp, 0.dp, 8.dp, 8.dp)
-val message = mutableStateOf("")
+private val BotChatBubbleShape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 20.dp)
+private val AuthorChatBubbleShape = RoundedCornerShape(20.dp, 0.dp, 20.dp, 20.dp)
 
 @Composable
 fun MessageItem(messageText: String, type: MessageType) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = if (type == MessageType.AI) Alignment.End else Alignment.Start
     ) {
         Box(
             modifier = Modifier
@@ -81,6 +82,8 @@ fun MessageItem(messageText: String, type: MessageType) {
                     start = 16.dp,
                     end = 16.dp
                 )
+                .widthIn(min = 50.dp, max = 250.dp)
+                .align(if (type == MessageType.USER) Alignment.End else Alignment.Start)
         ) {
             Text(
                 text = messageText,
