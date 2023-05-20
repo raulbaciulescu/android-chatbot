@@ -2,9 +2,10 @@ package com.university.androidchatbot.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.university.androidchatbot.R
+import com.university.androidchatbot.ui.theme.AndroidChatbotTheme
 import com.university.androidchatbot.ui.theme.primaryColor
 
 @Composable
@@ -28,17 +30,17 @@ fun FloatingButton(
     val isPressed = remember { mutableStateOf(false) }
 
     FloatingActionButton(
-        onLongClick = { isPressed.value = true },
+        shape = CircleShape,
         onClick = onClick,
-        backgroundColor = primaryColor,
+        containerColor = primaryColor,
         modifier = Modifier
-            .size(if (isPressed.value) pressedSize else initialSize)
+            .size(if (isPressed.value) pressedSize else initialSize),
     ) {
 
         Icon(
             painter = painter,
             contentDescription = null,
-            tint = MaterialTheme.colors.onBackground,
+            tint = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .size(25.dp)
         )
@@ -48,18 +50,7 @@ fun FloatingButton(
 @Preview
 @Composable
 fun previewMyButton() {
-    FloatingActionButton(
-        onClick = { /*TODO*/ },
-        backgroundColor = primaryColor
-    ) {
-
-        Icon(
-            painter = painterResource(id = R.drawable.send),
-            contentDescription = "send-icon",
-            tint = MaterialTheme.colors.onBackground,
-            modifier = Modifier
-                .clickable {
-                }
-                .size(25.dp))
+    AndroidChatbotTheme() {
+        FloatingButton(onClick = {}, painter = painterResource(R.drawable.send))
     }
 }

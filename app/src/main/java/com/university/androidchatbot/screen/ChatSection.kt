@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -73,7 +73,7 @@ fun MessageItem(messageText: String, type: MessageType) {
         Box(
             modifier = Modifier
                 .background(
-                    if (type == MessageType.USER) MaterialTheme.colors.primary else Color(0xFF616161),
+                    if (type == MessageType.USER) MaterialTheme.colorScheme.primary else Color(0xFF616161),
                     shape = if (type == MessageType.USER) AuthorChatBubbleShape else BotChatBubbleShape
                 )
                 .padding(

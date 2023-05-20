@@ -1,14 +1,21 @@
 package com.university.androidchatbot.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.material.*
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.university.androidchatbot.ui.theme.backgroundColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     onNavigationIconClick: () -> Unit
@@ -17,8 +24,11 @@ fun AppBar(
         title = {
             Text(text = "hello")
         },
-        backgroundColor = backgroundColor,
-        contentColor = MaterialTheme.colors.onPrimary,
+        colors = TopAppBarDefaults.topAppBarColors(
+
+        ),
+//        conntaColor = backgroundColor,
+//        contentColor = MaterialTheme.colors.onPrimary,
         navigationIcon = {
             IconButton(onClick = onNavigationIconClick) {
                 Icon(
