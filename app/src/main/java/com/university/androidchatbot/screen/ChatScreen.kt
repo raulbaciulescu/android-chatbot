@@ -1,7 +1,8 @@
 package com.university.androidchatbot.screen
 
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -11,14 +12,30 @@ import com.university.androidchatbot.viewmodel.MessageViewModel
 @Composable
 fun ChatScreen(
     chatId: Int,
-    messageViewModel: MessageViewModel = hiltViewModel()
+    messageViewModel: MessageViewModel = hiltViewModel(),
+    open: () -> Unit
 ) {
-    Column {
-        ChatSection(Modifier.weight(1f))
-        MessageSection(
-            onSendMessage = { text ->
-                messageViewModel.addMessage(text, chatId)
-            }
+    Scaffold(
+        topBar = {
+            AppBar(
+                onNavigationIconClick = {
+                    open()
+                }
+            )
+        },
+        bottomBar = {
+            MessageSection(
+                onSendMessage = { text ->
+                    messageViewModel.addMessage(text, chatId)
+                }
+            )
+        }
+    ) {
+        ChatSection(
+            modifier = Modifier.padding(
+                bottom = it.calculateBottomPadding(),
+                top = it.calculateTopPadding()
+            )
         )
     }
 

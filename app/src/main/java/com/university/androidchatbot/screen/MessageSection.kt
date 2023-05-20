@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -101,20 +104,41 @@ fun MessageSection(
         Row(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .imePadding(),
         ) {
             OutlinedTextField(
                 placeholder = { Text("Type a message...") },
                 value = speechRecognitionViewModel.message,
                 onValueChange = {
                     speechRecognitionViewModel.message = it
-                    isTyping.value = speechRecognitionViewModel.message != ""
                 },
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(25.dp)
             )
             Spacer(modifier = Modifier.size(12.dp))
-            FloatingButton(painter = painterResource(id = R.drawable.send), onClick = {})
+            if (speechRecognitionViewModel.message == "")
+                FloatingButton(
+                    painter = painterResource(id = R.drawable.mic),
+                    onClick = {
+                        if (!isSpeaking.value) {
+                            isSpeaking.value = true
+                            waveRecorder.startRecording()
+                        } else {
+                            waveRecorder.stopRecording()
+                            speechRecognitionViewModel.transcribe()
+                        }
+                    }
+                )
+            else
+                FloatingButton(
+                    painter = painterResource(id = R.drawable.send),
+                    onClick = {
+                        onSendMessage(speechRecognitionViewModel.message)
+                        speechRecognitionViewModel.message = ""
+                    }
+                )
         }
     }
 }

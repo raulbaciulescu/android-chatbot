@@ -1,5 +1,6 @@
 package com.university.androidchatbot.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.viewmodel.ChatViewModel
 import com.university.androidchatbot.viewmodel.MessageViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     chatId: Int,
@@ -39,67 +41,33 @@ fun HomeScreen(
     onNewChatClick: () -> Unit,
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
-//    val scaffoldState = rememberScaffoldState()
-//    val scope = rememberCoroutineScope()
-//
-//    Scaffold(
-//        scaffoldState = scaffoldState,
-//        topBar = {
-//            AppBar(
-//                onNavigationIconClick = {
-//                    scope.launch {
-//                        chatViewModel.refreshChats()
-//                        scaffoldState.drawerState.open()
-//                    }
-//                }
-//            )
-//        },
-//        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
-//        drawerContent = {
-//            DrawerHeader(onNewChatClick = onNewChatClick)
-//            DrawerBody(
-//                items = chatViewModel.chats,
-//                onItemClick = {
-//                    navigate(it.id)
-//                }
-//            )
-//        }
-//    ) {
-//        ChatScreen(chatId)
-//    }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    // icons to mimic drawer destinations
-    val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
-    val selectedItem = remember { mutableStateOf(items[0]) }
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.fillMaxWidth(.7f)) {
-                Spacer(Modifier.height(12.dp))
-                items.forEach { item ->
-                    NavigationDrawerItem(
-                        icon = { Icon(item, contentDescription = null) },
-                        label = { Text(item.name) },
-                        selected = item == selectedItem.value,
-                        onClick = {
-                            scope.launch { drawerState.close() }
-                            selectedItem.value = item
-                        },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
-                    DrawerHeader(onNewChatClick = onNewChatClick)
-                    DrawerBody(
-                        items = chatViewModel.chats,
-                        onItemClick = {
-                            navigate(it.id)
-                        }
-                    )
-                }
+                DrawerHeader(onNewChatClick = onNewChatClick)
+                DrawerBody(
+                    items = chatViewModel.chats,
+                    onItemClick = {
+                        navigate(it.id)
+                    }
+                )
             }
         },
         content = {
-            ChatScreen(chatId)
+            ChatScreen(
+                chatId = chatId,
+                open = {
+                    scope.launch {
+                        chatViewModel.refreshChats()
+                        drawerState.open()
+                    }
+                }
+            )
         }
     )
 }

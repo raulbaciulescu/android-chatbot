@@ -1,8 +1,11 @@
 package com.university.androidchatbot.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +23,7 @@ import com.university.androidchatbot.R
 import com.university.androidchatbot.ui.theme.AndroidChatbotTheme
 import com.university.androidchatbot.ui.theme.primaryColor
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FloatingButton(
     painter: Painter,
@@ -34,6 +38,10 @@ fun FloatingButton(
         onClick = onClick,
         containerColor = primaryColor,
         modifier = Modifier
+//            .combinedClickable(
+//                onClick = { println("%% click") },
+//                onLongClick = { println("%% on long click") }
+//            )
             .size(if (isPressed.value) pressedSize else initialSize),
     ) {
 

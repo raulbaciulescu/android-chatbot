@@ -3,31 +3,28 @@ package com.university.androidchatbot.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.university.androidchatbot.components.VerticalSpace
 import com.university.androidchatbot.data.MessageType
+import com.university.androidchatbot.todo.v1.conditional
 import com.university.androidchatbot.viewmodel.MessageUiState
 import com.university.androidchatbot.viewmodel.MessageViewModel
-import kotlin.math.min
+
 
 @Composable
 fun ChatSection(
@@ -35,27 +32,27 @@ fun ChatSection(
 ) {
     val listState = rememberLazyListState()
     val messageViewModel = hiltViewModel<MessageViewModel>()
-
     when (val uiState = messageViewModel.uiState) {
         is MessageUiState.Success ->
             LazyColumn(
                 state = listState,
                 modifier = modifier
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp),
+                reverseLayout = true
             ) {
-                items(uiState.items) { message ->
+                item { VerticalSpace(16.dp)}
+                itemsIndexed(uiState.items) { index, message ->
                     MessageItem(
                         messageText = message.text,
-                        type = message.type
+                        type = message.type,
+                        isLast = index == uiState.items.lastIndex
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
 
         is MessageUiState.Loading -> LoadingAnimation()
         is MessageUiState.Error -> Text(text = "Failed to load items - ${uiState.exception?.message}")
     }
-
 
     LaunchedEffect(messageViewModel.messages) {
         listState.scrollToItem(if (messageViewModel.messages.isNotEmpty()) messageViewModel.messages.size - 1 else 0)
@@ -66,14 +63,21 @@ private val BotChatBubbleShape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 20.dp)
 private val AuthorChatBubbleShape = RoundedCornerShape(20.dp, 0.dp, 20.dp, 20.dp)
 
 @Composable
-fun MessageItem(messageText: String, type: MessageType) {
+fun MessageItem(isLast: Boolean, messageText: String, type: MessageType) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .conditional(isLast) {
+                padding(top = 16.dp)
+            }
     ) {
         Box(
             modifier = Modifier
                 .background(
-                    if (type == MessageType.USER) MaterialTheme.colorScheme.primary else Color(0xFF616161),
+                    if (type == MessageType.USER) MaterialTheme.colorScheme.primary else Color(
+                        0xFF616161
+                    ),
                     shape = if (type == MessageType.USER) AuthorChatBubbleShape else BotChatBubbleShape
                 )
                 .padding(

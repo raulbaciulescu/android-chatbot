@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.GsonBuilder
+import com.university.androidchatbot.BuildConfig
 import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.api.AuthApi
 import com.university.androidchatbot.api.AuthDataSource
@@ -18,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -27,9 +29,9 @@ val Context.userPreferencesDataStore by preferencesDataStore(
     name = "user_preferences"
 )
 
-const val IP = "192.168.0.129"
+//const val IP = "192.168.0.129"
 //const val IP = "192.168.10.238"
-//const val IP = "192.168.132.154"
+const val IP = "192.168.132.154"
 //const val IP = "192.168.100.24"
 
 @Module
@@ -62,7 +64,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSpeechRecognitionApi(okHttpClient: OkHttpClient, gsonFactory: GsonConverterFactory): SpeechRecognitionApi {
+    fun provideSpeechRecognitionApi(
+        okHttpClient: OkHttpClient,
+        gsonFactory: GsonConverterFactory
+    ): SpeechRecognitionApi {
         return Retrofit.Builder()
             .baseUrl("http://$IP:5000/")
             .client(okHttpClient)
@@ -127,6 +132,14 @@ object AppModule {
             .connectTimeout(30, TimeUnit.SECONDS)
             .apply {
                 this.addInterceptor(tokenInterceptor)
-            }.build()
+            }
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    val interceptor = HttpLoggingInterceptor()
+                    interceptor.level = HttpLoggingInterceptor.Level.BODY
+                    addInterceptor(interceptor)
+                }
+            }
+            .build()
     }
 }
