@@ -29,27 +29,6 @@ class MessageViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
 ) : ViewModel() {
     var state by mutableStateOf(ScreenState())
-
-    fun getMessagesByChat(chatId: Int) {
-        viewModelScope.launch {
-            paginator.loadNextItems(chatId)
-        }
-    }
-
-    fun addMessage(text: String, chatId: Int) {
-        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
-        var receivedMessage: Message
-        state = state.copy(
-            items = listOf(message) + state.items,
-        )
-        viewModelScope.launch {
-            receivedMessage = messageRepository.sendMessage(message)
-            state = state.copy(
-                items = listOf(receivedMessage) + state.items,
-            )
-        }
-    }
-
     private val paginator = DefaultPaginator(
         initialKey = state.page,
         onLoadUpdated = {
@@ -76,6 +55,26 @@ class MessageViewModel @Inject constructor(
     fun loadNextItems(chatId: Int) {
         viewModelScope.launch {
             paginator.loadNextItems(chatId)
+        }
+    }
+
+    fun getMessagesByChat(chatId: Int) {
+        viewModelScope.launch {
+            paginator.loadNextItems(chatId)
+        }
+    }
+
+    fun addMessage(text: String, chatId: Int) {
+        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
+        var receivedMessage: Message
+        state = state.copy(
+            items = listOf(message) + state.items,
+        )
+        viewModelScope.launch {
+            receivedMessage = messageRepository.sendMessage(message)
+            state = state.copy(
+                items = listOf(receivedMessage) + state.items,
+            )
         }
     }
 }
