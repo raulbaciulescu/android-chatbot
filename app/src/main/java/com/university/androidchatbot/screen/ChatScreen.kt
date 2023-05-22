@@ -35,7 +35,8 @@ fun ChatScreen(
             modifier = Modifier.padding(
                 bottom = it.calculateBottomPadding(),
                 top = it.calculateTopPadding()
-            )
+            ),
+            chatId = chatId
         )
     }
 

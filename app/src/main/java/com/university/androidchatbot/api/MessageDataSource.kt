@@ -22,6 +22,10 @@ interface MessageApi {
     @Headers("Content-Type: application/json")
     @GET("/chats")
     suspend fun getChats(): List<Chat>
+
+    @Headers("Content-Type: application/json")
+    @GET("/messages/{chatId}/{page}")
+    suspend fun getMessages(@Path("chatId") chatId: Int, @Path("page") page: Int): List<Message>
 }
 
 class MessageDataSource @Inject constructor(private val messageApi: MessageApi) {
@@ -35,10 +39,17 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
         } catch (e: Exception) {
             listOf()
         }
-
     }
 
     suspend fun getChats(): List<Chat> {
         return messageApi.getChats()
+    }
+
+    suspend fun getMessages(chatId: Int, page: Int): Result<List<Message>> {
+        return try {
+           Result.success(messageApi.getMessages(chatId, page))
+        } catch (e: Exception) {
+            Result.success(emptyList())
+        }
     }
 }

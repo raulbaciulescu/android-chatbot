@@ -15,7 +15,7 @@ class MyAppViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val tokenInterceptor: TokenInterceptor,
 ) : ViewModel() {
-    var chatId = mutableStateOf(0)
+    var chatId = mutableStateOf(4)
 
     fun logout() {
         viewModelScope.launch {
