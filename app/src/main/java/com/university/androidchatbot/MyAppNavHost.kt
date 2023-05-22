@@ -1,21 +1,19 @@
 package com.university.androidchatbot
 
 import android.util.Log
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.university.androidchatbot.auth.LoginScreen
-import com.university.androidchatbot.auth.RegisterScreen
-import com.university.androidchatbot.core.ui.UserPreferencesViewModel
-import com.university.androidchatbot.todo.HomeScreen
+import androidx.navigation.navArgument
+import com.university.androidchatbot.screen.LoginScreen
+import com.university.androidchatbot.screen.RegisterScreen
+import com.university.androidchatbot.viewmodel.UserPreferencesViewModel
+import com.university.androidchatbot.screen.HomeScreen
+import com.university.androidchatbot.viewmodel.MyAppViewModel
 
 
 const val loginRoute = "auth"
@@ -38,7 +36,7 @@ fun MyAppNavHost() {
             LoginScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate("chat/$chatId")
+                    navController.navigate("chat/${chatId.value}")
                 },
                 navController = navController
             )
@@ -48,34 +46,40 @@ fun MyAppNavHost() {
             RegisterScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate("chat/$chatId")
+                    navController.navigate("chat/${chatId.value}")
                 },
+                navController = navController
             )
         }
-        composable(route = "chat/$chatId")
+        composable(
+            route = "chat/{chatId}",
+            arguments = listOf(navArgument("chatId") { type = NavType.IntType })
+        )
         {
-            HomeScreen(chatId, navController)
+            HomeScreen(
+                chatId = chatId.value,
+                navigate = { chatId ->
+                    myAppViewModel.chatId.value = chatId
+                    navController.navigate("chat/$chatId")
+                },
+                onNewChatClick = {
+                    myAppViewModel.chatId.value = 0
+                    navController.navigate("chat/0")
+                }
+            )
         }
     }
 
     LaunchedEffect(userPreferencesUiState.token) {
         if (userPreferencesUiState.token.isNotEmpty()) {
-            Log.d("MyAppNavHost", "Launched effect navigate to items "+ userPreferencesUiState.token)
+            Log.d(
+                "MyAppNavHost",
+                "Launched effect navigate to items " + userPreferencesUiState.token
+            )
             myAppViewModel.setToken(userPreferencesUiState.token)
-            navController.navigate("chat/$chatId") {
+            navController.navigate("chat/${chatId.value}") {
                 popUpTo(0)
             }
         }
-    }
-}
-
-
-@Composable
-fun Home() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.onSurface
-    ) {
-        Text(text = "Hello!")
     }
 }
