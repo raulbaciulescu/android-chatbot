@@ -95,7 +95,10 @@ fun LoginScreen(onClose: () -> Unit, navController: NavController) {
                         }) {
                             Icon(
                                 modifier = Modifier.size(25.dp),
-                                painter = painterResource(id = if (passwordVisibility.value) R.drawable.eye1 else R.drawable.eye2),
+                                painter = painterResource(
+                                    id = if (passwordVisibility.value)
+                                        R.drawable.ic_eye_open else R.drawable.ic_eye_closed
+                                ),
                                 tint = MaterialTheme.colorScheme.primary,
                                 contentDescription = null
                             )
@@ -103,7 +106,8 @@ fun LoginScreen(onClose: () -> Unit, navController: NavController) {
                     },
                     onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (passwordVisibility.value)
+                        VisualTransformation.None else PasswordVisualTransformation(),
                 )
 
                 Spacer(modifier = Modifier.padding(10.dp))

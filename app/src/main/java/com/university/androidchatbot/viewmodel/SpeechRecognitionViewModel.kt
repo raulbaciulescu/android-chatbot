@@ -22,13 +22,10 @@ class SpeechRecognitionViewModel @Inject constructor(
     val waveRecorder = WaveRecorder(application.cacheDir.absolutePath + "/audio.wav")
     var message by mutableStateOf("")
 
-    fun transcribe(): String {
-        var result = ""
+    fun transcribe() {
         val audioFile = File(application.cacheDir.absolutePath + "/audio.wav")
         viewModelScope.launch {
             message = speechRecognitionDataSource.transcribe(audioFile)
-            println("&&&&&&&&&& " + result)
         }
-        return result
     }
 }

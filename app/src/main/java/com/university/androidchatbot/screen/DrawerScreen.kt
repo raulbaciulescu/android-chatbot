@@ -10,13 +10,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.university.androidchatbot.R
+import com.university.androidchatbot.components.HorizontalSpace
+import com.university.androidchatbot.components.VerticalSpace
 import com.university.androidchatbot.data.Chat
 
 @Composable
@@ -48,14 +56,20 @@ fun DrawerBody(
                     .clickable {
                         onItemClick(item)
                     }
-                    .padding(16.dp)
+                    .padding(vertical = 16.dp)
             ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_message),
+                    contentDescription = null
+                )
+                HorizontalSpace(8.dp)
                 Text(
+                    modifier = Modifier.weight(1f),
                     text = item.title,
                     style = itemTextStyle,
-                    modifier = Modifier.weight(1f)
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.width(16.dp))
             }
         }
     }

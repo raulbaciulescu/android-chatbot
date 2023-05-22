@@ -1,18 +1,13 @@
 package com.university.androidchatbot.api
 
-import com.university.androidchatbot.data.Chat
-import com.university.androidchatbot.data.Message
 import com.university.androidchatbot.data.SpeechToTextResponse
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Path
 import java.io.File
 import javax.inject.Inject
 

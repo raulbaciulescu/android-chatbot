@@ -15,11 +15,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface MessageUiState {
-    data class Success(val items: List<Message>) : MessageUiState
-    data class Error(val exception: Throwable?) : MessageUiState
-    object Loading : MessageUiState
-}
 
 data class ScreenState(
     val isLoading: Boolean = false,
@@ -33,22 +28,9 @@ data class ScreenState(
 class MessageViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
 ) : ViewModel() {
-    private var _messages = mutableStateListOf<Message>()
-    val messages: List<Message>
-        get() = _messages.toList()
-
-    var uiState: MessageUiState by mutableStateOf(MessageUiState.Loading)
-        private set
+    var state by mutableStateOf(ScreenState())
 
     fun getMessagesByChat(chatId: Int) {
-//        viewModelScope.launch {
-//            uiState = MessageUiState.Loading
-//            var result: List<Message> = listOf()
-//            if (chatId != 0)
-//                result = messageRepository.getMessages(chatId)
-//            _messages = result.toMutableStateList()
-//            uiState = MessageUiState.Success(result)
-//        }
         viewModelScope.launch {
             paginator.loadNextItems(chatId)
         }
@@ -57,26 +39,17 @@ class MessageViewModel @Inject constructor(
     fun addMessage(text: String, chatId: Int) {
         val message = Message(text = text, type = MessageType.USER, chatId = chatId)
         var receivedMessage: Message
-        _messages.add(message)
-        uiState = MessageUiState.Success(_messages)
         state = state.copy(
             items = listOf(message) + state.items,
         )
-        println("^^^^^^ " + state.items)
-
-        //uiState = MessageUiState.Loading
         viewModelScope.launch {
             receivedMessage = messageRepository.sendMessage(message)
-            _messages.add(receivedMessage)
-            uiState = MessageUiState.Success(_messages)
             state = state.copy(
                 items = listOf(receivedMessage) + state.items,
             )
-            println("^^^^^^ " + state.items)
         }
     }
 
-    var state by mutableStateOf(ScreenState())
     private val paginator = DefaultPaginator(
         initialKey = state.page,
         onLoadUpdated = {

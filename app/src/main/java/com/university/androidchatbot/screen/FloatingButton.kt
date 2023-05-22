@@ -1,18 +1,14 @@
 package com.university.androidchatbot.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -23,13 +19,13 @@ import com.university.androidchatbot.R
 import com.university.androidchatbot.ui.theme.AndroidChatbotTheme
 import com.university.androidchatbot.ui.theme.primaryColor
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FloatingButton(
+    modifier: Modifier = Modifier,
     painter: Painter,
     onClick: () -> Unit,
     initialSize: Dp = 56.dp,
-    pressedSize: Dp = 72.dp
+    pressedSize: Dp = 72.dp,
 ) {
     val isPressed = remember { mutableStateOf(false) }
 
@@ -37,11 +33,7 @@ fun FloatingButton(
         shape = CircleShape,
         onClick = onClick,
         containerColor = primaryColor,
-        modifier = Modifier
-//            .combinedClickable(
-//                onClick = { println("%% click") },
-//                onLongClick = { println("%% on long click") }
-//            )
+        modifier = modifier
             .size(if (isPressed.value) pressedSize else initialSize),
     ) {
 
@@ -57,8 +49,8 @@ fun FloatingButton(
 
 @Preview
 @Composable
-fun previewMyButton() {
+fun PreviewFloatingButton() {
     AndroidChatbotTheme() {
-        FloatingButton(onClick = {}, painter = painterResource(R.drawable.send))
+        FloatingButton(onClick = {}, painter = painterResource(R.drawable.ic_send))
     }
 }

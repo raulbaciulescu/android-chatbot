@@ -91,7 +91,8 @@ fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
                     }) {
                         Icon(
                             modifier = Modifier.size(25.dp),
-                            painter = painterResource(id = if (passwordVisibility.value) R.drawable.eye1 else R.drawable.eye2),
+                            painter = painterResource(id = if (passwordVisibility.value)
+                                R.drawable.ic_eye_open else R.drawable.ic_eye_closed),
                             tint = MaterialTheme.colorScheme.primary,
                             contentDescription = null
                         )
