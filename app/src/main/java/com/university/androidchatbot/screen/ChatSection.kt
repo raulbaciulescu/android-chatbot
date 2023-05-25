@@ -40,27 +40,7 @@ fun ChatSection(
     val listState = rememberLazyListState()
     val messageViewModel = hiltViewModel<MessageViewModel>()
     val state = messageViewModel.state
-//    when (val state = messageViewModel.state) {
-//        is MessageUiState.Success ->
-//            LazyColumn(
-//                state = listState,
-//                modifier = modifier
-//                    .padding(horizontal = 16.dp),
-//                reverseLayout = true
-//            ) {
-//                item { VerticalSpace(16.dp)}
-//                itemsIndexed(state.items) { index, message ->
-//                    MessageItem(
-//                        messageText = message.text,
-//                        type = message.type,
-//                        isLast = index == state.items.lastIndex
-//                    )
-//                }
-//            }
-//
-//        is MessageUiState.Loading -> LoadingAnimation()
-//        is MessageUiState.Error -> Text(text = "Failed to load items - ${state.exception?.message}")
-//    }
+
     LazyColumn(
         state = listState,
         modifier = modifier

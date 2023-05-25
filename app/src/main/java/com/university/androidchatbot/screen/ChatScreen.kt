@@ -11,6 +11,7 @@ import com.university.androidchatbot.viewmodel.MessageViewModel
 
 @Composable
 fun ChatScreen(
+    chatTitle: String? = "",
     chatId: Int,
     messageViewModel: MessageViewModel = hiltViewModel(),
     open: () -> Unit
@@ -18,9 +19,10 @@ fun ChatScreen(
     Scaffold(
         topBar = {
             AppBar(
+                chatTitle = chatTitle ?: "",
                 onNavigationIconClick = {
                     open()
-                }
+                },
             )
         },
         bottomBar = {

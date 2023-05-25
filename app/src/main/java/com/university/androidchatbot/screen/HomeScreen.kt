@@ -1,6 +1,7 @@
 package com.university.androidchatbot.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -37,32 +39,20 @@ fun HomeScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.fillMaxWidth(.7f)) {
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    DrawerHeader(onNewChatClick = onNewChatClick)
-                    DrawerBody(
-                        modifier = Modifier.fillMaxHeight(.9f),
-                        items = chatViewModel.chats,
-                        onItemClick = {
-                            navigate(it.id)
-                        }
-                    )
-                    Divider(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.White.copy(alpha = .3f)
-                    )
-                    Button(onClick = { /*TODO*/ }) {
-                        Text("bla bla")
-                    }
-                }
+                DrawerScreen(
+                    chatViewModel = chatViewModel,
+                    onNewChatClick = onNewChatClick,
+                    navigate = navigate
+                )
             }
         },
         content = {
             ChatScreen(
+                chatTitle = chatViewModel.chats.find { it.id == chatId }?.title,
                 chatId = chatId,
                 open = {
                     scope.launch {

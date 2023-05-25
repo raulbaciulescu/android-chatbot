@@ -81,7 +81,7 @@ fun MessageSection(
                 releaseButton = { time ->
                     timeOfRelease = time
                     waveRecorder.stopRecording()
-                    if (timeOfRelease - timeOfTouch > 2000)
+                    if (timeOfRelease - timeOfTouch > 1400)
                         speechRecognitionViewModel.transcribe()
                     else {
                         Toast
