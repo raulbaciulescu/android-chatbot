@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.university.androidchatbot.data.Message
@@ -64,7 +64,7 @@ class MessageViewModel @Inject constructor(
         }
     }
 
-    fun addMessage(text: String, chatId: Int) {
+    fun sendMessage(text: String, chatId: Int) {
         val message = Message(text = text, type = MessageType.USER, chatId = chatId)
         var receivedMessage: Message
         state = state.copy(
@@ -72,6 +72,20 @@ class MessageViewModel @Inject constructor(
         )
         viewModelScope.launch {
             receivedMessage = messageRepository.sendMessage(message)
+            state = state.copy(
+                items = listOf(receivedMessage) + state.items,
+            )
+        }
+    }
+
+    fun onSendPdfMessage(text: String, path: String, chatId: Int) {
+        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
+        var receivedMessage: Message
+        state = state.copy(
+            items = listOf(message) + state.items,
+        )
+        viewModelScope.launch {
+            receivedMessage = messageRepository.sendMessageWithPdf(message, path)
             state = state.copy(
                 items = listOf(receivedMessage) + state.items,
             )

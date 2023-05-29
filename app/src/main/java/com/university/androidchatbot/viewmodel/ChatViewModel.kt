@@ -1,5 +1,6 @@
 package com.university.androidchatbot.viewmodel
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +23,8 @@ sealed interface ChatUiState {
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val messageRepository: MessageRepository
+    private val messageRepository: MessageRepository,
+    val application: Application
 ) : ViewModel() {
     fun refreshChats() {
         viewModelScope.launch {

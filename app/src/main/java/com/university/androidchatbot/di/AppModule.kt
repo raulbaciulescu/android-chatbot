@@ -3,6 +3,7 @@ package com.university.androidchatbot.di
 import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.university.androidchatbot.BuildConfig
 import com.university.androidchatbot.repository.AuthRepository
@@ -31,7 +32,7 @@ val Context.userPreferencesDataStore by preferencesDataStore(
 
 //const val IP = "192.168.0.129"
 //const val IP = "192.168.10.238"
-const val IP = "192.168.132.154"
+const val IP = "192.168.50.154"
 //const val IP = "192.168.100.24"
 
 @Module
@@ -117,7 +118,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGson(): GsonConverterFactory {
+    fun provideGsonConverterFactory(): GsonConverterFactory {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -126,10 +127,18 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder()
+            .setLenient()
+            .create()
+    }
+
+    @Provides
+    @Singleton
     fun provideOkHttpClient(tokenInterceptor: TokenInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .connectTimeout(120, TimeUnit.SECONDS)
             .apply {
                 this.addInterceptor(tokenInterceptor)
             }

@@ -24,6 +24,7 @@ interface SpeechRecognitionApi {
 
 class SpeechRecognitionDataSource @Inject constructor(private val speechRecognitionApi: SpeechRecognitionApi) {
     suspend fun transcribe(file: File): String {
+        println("transcribe " +file)
         val filePart: MultipartBody.Part = MultipartBody.Part.createFormData("file", file.name, file.asRequestBody())
         return speechRecognitionApi.transcribe(filePart).text
     }

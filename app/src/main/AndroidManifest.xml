@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:name=".MyApplication"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -34,6 +35,6 @@
     </application>
     <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 </manifest>

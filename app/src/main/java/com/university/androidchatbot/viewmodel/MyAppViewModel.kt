@@ -1,6 +1,9 @@
 package com.university.androidchatbot.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.university.androidchatbot.core.data.TokenInterceptor
@@ -15,7 +18,8 @@ class MyAppViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val tokenInterceptor: TokenInterceptor,
 ) : ViewModel() {
-    var chatId = mutableStateOf(4)
+    var chatId by mutableStateOf(4)
+//    var pdfPath
 
     fun logout() {
         viewModelScope.launch {

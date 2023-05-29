@@ -28,7 +28,10 @@ fun ChatScreen(
         bottomBar = {
             MessageSection(
                 onSendMessage = { text ->
-                    messageViewModel.addMessage(text, chatId)
+                    messageViewModel.sendMessage(text, chatId)
+                },
+                onSendPdfMessage = { text, path ->
+                    messageViewModel.onSendPdfMessage(text, path, chatId)
                 }
             )
         }

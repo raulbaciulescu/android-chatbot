@@ -13,6 +13,7 @@ import com.university.androidchatbot.screen.LoginScreen
 import com.university.androidchatbot.screen.RegisterScreen
 import com.university.androidchatbot.viewmodel.UserPreferencesViewModel
 import com.university.androidchatbot.screen.HomeScreen
+import com.university.androidchatbot.todo.v1.Util
 import com.university.androidchatbot.viewmodel.MyAppViewModel
 
 
@@ -36,7 +37,7 @@ fun MyAppNavHost() {
             LoginScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate("chat/${chatId.value}")
+                    navController.navigate("chat/${chatId}")
                 },
                 navController = navController
             )
@@ -46,7 +47,7 @@ fun MyAppNavHost() {
             RegisterScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate("chat/${chatId.value}")
+                    navController.navigate("chat/${chatId}")
                 },
                 navController = navController
             )
@@ -57,13 +58,19 @@ fun MyAppNavHost() {
         )
         {
             HomeScreen(
-                chatId = chatId.value,
+                chatId = chatId,
                 navigate = { chatId ->
-                    myAppViewModel.chatId.value = chatId
+                    myAppViewModel.chatId = chatId
                     navController.navigate("chat/$chatId")
                 },
                 onNewChatClick = {
-                    myAppViewModel.chatId.value = 0
+                    myAppViewModel.chatId = 0
+                    navController.navigate("chat/0")
+                },
+                onNewChatWithPdfClick = { path ->
+                    myAppViewModel.chatId = 0
+                    Util.pdfPath = path
+                    println("nav host " + Util.pdfPath)
                     navController.navigate("chat/0")
                 }
             )
@@ -77,7 +84,7 @@ fun MyAppNavHost() {
                 "Launched effect navigate to items " + userPreferencesUiState.token
             )
             myAppViewModel.setToken(userPreferencesUiState.token)
-            navController.navigate("chat/${chatId.value}") {
+            navController.navigate("chat/${chatId}") {
                 popUpTo(0)
             }
         }
