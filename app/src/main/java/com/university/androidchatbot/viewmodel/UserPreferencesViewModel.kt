@@ -17,9 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserPreferencesViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val tokenInterceptor: TokenInterceptor
-) :
-    ViewModel() {
+) : ViewModel() {
     var uiState: UserPreferences by mutableStateOf(UserPreferences())
         private set
 
@@ -33,17 +31,6 @@ class UserPreferencesViewModel @Inject constructor(
             userPreferencesRepository.userPreferencesStream.collect { userPreferences ->
                 uiState = userPreferences
             }
-        }
-    }
-
-//    fun setToken() {
-//        tokenInterceptor.
-//    }
-
-    fun save(userPreferences: UserPreferences) {
-        viewModelScope.launch {
-            Log.d(TAG, "saveUserPreferences...");
-            userPreferencesRepository.save(userPreferences)
         }
     }
 }
