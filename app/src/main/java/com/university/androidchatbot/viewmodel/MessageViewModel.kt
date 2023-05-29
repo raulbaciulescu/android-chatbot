@@ -11,9 +11,11 @@ import com.university.androidchatbot.data.Message
 import com.university.androidchatbot.data.MessageType
 import com.university.androidchatbot.repository.MessageRepository
 import com.university.androidchatbot.todo.v1.DefaultPaginator
+import com.university.androidchatbot.todo.v1.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.streams.toList
 
 
 data class ScreenState(
@@ -65,29 +67,31 @@ class MessageViewModel @Inject constructor(
     }
 
     fun sendMessage(text: String, chatId: Int) {
-        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
+        val message = Message(text = text, type = MessageType.USER, chatId = Util.chatId)
         var receivedMessage: Message
         state = state.copy(
             items = listOf(message) + state.items,
         )
         viewModelScope.launch {
             receivedMessage = messageRepository.sendMessage(message)
+            Util.chatId = receivedMessage.chatId
             state = state.copy(
-                items = listOf(receivedMessage) + state.items,
+                items = listOf(receivedMessage) + state.items.stream().map { item -> item.copy(chatId = Util.chatId) }.toList(),
             )
         }
     }
 
     fun onSendPdfMessage(text: String, path: String, chatId: Int) {
-        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
+        val message = Message(text = text, type = MessageType.USER, chatId = Util.chatId)
         var receivedMessage: Message
         state = state.copy(
             items = listOf(message) + state.items,
         )
         viewModelScope.launch {
             receivedMessage = messageRepository.sendMessageWithPdf(message, path)
+            Util.chatId = receivedMessage.chatId
             state = state.copy(
-                items = listOf(receivedMessage) + state.items,
+                items = listOf(receivedMessage) + state.items.stream().map { item -> item.copy(chatId = Util.chatId) }.toList(),
             )
         }
     }

@@ -61,17 +61,24 @@ fun MyAppNavHost() {
                 chatId = chatId,
                 navigate = { chatId ->
                     myAppViewModel.chatId = chatId
+                    Util.chatId = chatId
                     navController.navigate("chat/$chatId")
                 },
                 onNewChatClick = {
                     myAppViewModel.chatId = 0
+                    Util.chatId = 0
                     navController.navigate("chat/0")
                 },
                 onNewChatWithPdfClick = { path ->
                     myAppViewModel.chatId = 0
+                    Util.chatId = 0
                     Util.pdfPath = path
                     println("nav host " + Util.pdfPath)
                     navController.navigate("chat/0")
+                },
+                onLogoutClick = {
+                    myAppViewModel.logout()
+                    navController.navigate(loginRoute)
                 }
             )
         }

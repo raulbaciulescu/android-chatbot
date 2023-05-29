@@ -19,7 +19,6 @@ class MyAppViewModel @Inject constructor(
     private val tokenInterceptor: TokenInterceptor,
 ) : ViewModel() {
     var chatId by mutableStateOf(4)
-//    var pdfPath
 
     fun logout() {
         viewModelScope.launch {

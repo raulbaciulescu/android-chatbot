@@ -40,6 +40,7 @@ fun DrawerScreen(
     chatViewModel: ChatViewModel = hiltViewModel(),
     onNewChatClick: () -> Unit,
     onNewChatWithPdfClick: (String) -> Unit,
+    onLogoutClick: () -> Unit,
     navigate: (chatId: Int) -> Unit,
     application: Application
 ) {
@@ -68,7 +69,7 @@ fun DrawerScreen(
         ) {
             IconTextButton(
                 modifier = Modifier.fillMaxWidth(.9f),
-                onClick = onNewChatClick,
+                onClick = onLogoutClick,
                 text = "Logout",
                 painter = painterResource(R.drawable.ic_logout)
             )

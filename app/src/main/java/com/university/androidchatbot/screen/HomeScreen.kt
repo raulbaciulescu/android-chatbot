@@ -7,6 +7,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +21,7 @@ fun HomeScreen(
     navigate: (chatId: Int) -> Unit,
     onNewChatClick: () -> Unit,
     onNewChatWithPdfClick: (String) -> Unit,
+    onLogoutClick: () -> Unit,
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -36,6 +38,7 @@ fun HomeScreen(
                     onNewChatWithPdfClick = { path ->
                         onNewChatWithPdfClick(path)
                     },
+                    onLogoutClick = onLogoutClick,
                     application = chatViewModel.application
                 )
             }
@@ -46,11 +49,15 @@ fun HomeScreen(
                 chatId = chatId,
                 open = {
                     scope.launch {
-                        chatViewModel.refreshChats()
                         drawerState.open()
                     }
                 }
             )
         }
     )
+
+    LaunchedEffect(drawerState.currentValue) {
+        if (drawerState.currentValue == DrawerValue.Open)
+            chatViewModel.refreshChats()
+    }
 }
