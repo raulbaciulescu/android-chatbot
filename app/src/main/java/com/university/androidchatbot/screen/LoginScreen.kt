@@ -86,6 +86,7 @@ fun LoginScreen(
         )
         VerticalSpace(10.dp)
         TextField(
+            modifier = Modifier.fillMaxWidth(),
             label = { Text(text = "Password") },
             value = password,
             trailingIcon = {
@@ -104,7 +105,6 @@ fun LoginScreen(
                 }
             },
             onValueChange = { password = it },
-            modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisibility.value)
                 VisualTransformation.None else PasswordVisualTransformation(),
         )
@@ -133,7 +133,8 @@ fun LoginScreen(
             );
         }
         if (loginUiState.authenticationError != null) {
-            Text(text = "Login failed ${loginUiState.authenticationError.message}")
+            println("Login failed ${loginUiState.authenticationError}")
+            Text(modifier = Modifier.fillMaxWidth(), text = "Login failed ${loginUiState.authenticationError}")
         }
     }
 

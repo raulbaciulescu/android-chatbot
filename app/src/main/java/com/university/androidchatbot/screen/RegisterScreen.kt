@@ -40,12 +40,13 @@ import com.university.androidchatbot.R
 import com.university.androidchatbot.components.VerticalSpace
 import com.university.androidchatbot.LOGIN_ROUTE
 import com.university.androidchatbot.viewmodel.LoginViewModel
+import com.university.androidchatbot.viewmodel.RegisterViewModel
 
 
 @Composable
 fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
-    val loginViewModel = hiltViewModel<LoginViewModel>()
-    val loginUiState = loginViewModel.uiState
+    val registerViewModel: RegisterViewModel = hiltViewModel()
+    val registerUiState = registerViewModel.uiState
     val passwordVisibility = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     var firstName by remember { mutableStateOf("") }
@@ -120,12 +121,16 @@ fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
         )
         VerticalSpace(20.dp)
         Button(
-            onClick = { loginViewModel.register(firstName, lastName, email, password) },
+            onClick = { registerViewModel.register(firstName, lastName, email, password) },
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .height(50.dp)
         ) {
-            Text(text = "Register", fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                text = "Register",
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
         VerticalSpace(20.dp)
         Text(
@@ -135,21 +140,21 @@ fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
             })
         )
         VerticalSpace(10.dp)
-        if (loginUiState.isAuthenticating) {
+        if (registerUiState.isAuthenticating) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(15.dp)
             );
         }
-        if (loginUiState.authenticationError != null) {
-            Text(text = "Login failed ${loginUiState.authenticationError.message}")
+        if (registerUiState.authenticationError != null) {
+            Text(text = "Login failed ${registerUiState.authenticationError}")
         }
     }
 
-    LaunchedEffect(loginUiState.authenticationCompleted) {
+    LaunchedEffect(registerUiState.authenticationCompleted) {
         Log.d(TAG, "Auth completed");
-        if (loginUiState.authenticationCompleted) {
+        if (registerUiState.authenticationCompleted) {
             onClose();
         }
     }

@@ -9,40 +9,34 @@ import androidx.lifecycle.viewModelScope
 import com.google.api.pathtemplate.ValidationException
 import com.university.androidchatbot.data.LoginRequest
 import com.university.androidchatbot.data.RegisterRequest
-import com.university.androidchatbot.screen.TAG
-import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.data.UserPreferences
+import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.repository.UserPreferencesRepository
+import com.university.androidchatbot.screen.TAG
 import com.university.androidchatbot.todo.v1.ValidatorUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class LoginUiState(
-    val isAuthenticating: Boolean = false,
-    val authenticationError: String? = null,
-    val authenticationCompleted: Boolean = false,
-    val token: String = ""
-)
-
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
     var uiState: LoginUiState by mutableStateOf(LoginUiState())
 
-    fun login(username: String, password: String) {
+    fun register(firstName: String, lastName: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                validateCredentials(username, password)
-                Log.v(TAG, "login...");
+                validateCredentials(firstName, lastName, email, password)
+                Log.v(TAG, "register...");
                 uiState = uiState.copy(isAuthenticating = true, authenticationError = null)
-                val result = authRepository.login(LoginRequest(username, password))
+                val result =
+                    authRepository.register(RegisterRequest(firstName, lastName, email, password))
                 uiState = if (result.isSuccess) {
                     userPreferencesRepository.save(
                         UserPreferences(
-                            username,
+                            email,
                             result.getOrNull()?.token ?: ""
                         )
                     )
@@ -62,7 +56,18 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun validateCredentials(email: String, password: String) {
+    private fun validateCredentials(
+        firstname: String,
+        lastname: String,
+        email: String,
+        password: String,
+    ) {
+        if (!ValidatorUtil.validateName(firstname))
+            throw ValidationException("Please enter your firstname.")
+
+        if (!ValidatorUtil.validateName(lastname))
+            throw ValidationException("Please enter your lastname.")
+
         if (!ValidatorUtil.validateEmail(email))
             throw ValidationException("Please enter a valid email address.")
 
