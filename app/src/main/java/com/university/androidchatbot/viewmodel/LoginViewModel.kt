@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.university.androidchatbot.data.LoginRequest
+import com.university.androidchatbot.data.RegisterRequest
 import com.university.androidchatbot.screen.TAG
 import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.data.UserPreferences
@@ -32,7 +34,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             Log.v(TAG, "login...");
             uiState = uiState.copy(isAuthenticating = true, authenticationError = null)
-            val result = authRepository.login(username, password)
+            val result = authRepository.login(LoginRequest(username, password))
             uiState = if (result.isSuccess) {
                 userPreferencesRepository.save(
                     UserPreferences(
@@ -54,7 +56,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             Log.v(TAG, "register...");
             uiState = uiState.copy(isAuthenticating = true, authenticationError = null)
-            val result = authRepository.register(firstname, lastName, email, password)
+            val result = authRepository.register(RegisterRequest(firstname, lastName, email, password))
             uiState = if (result.isSuccess) {
                 userPreferencesRepository.save(
                     UserPreferences(

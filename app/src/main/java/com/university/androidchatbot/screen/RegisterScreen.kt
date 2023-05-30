@@ -38,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.university.androidchatbot.R
 import com.university.androidchatbot.components.VerticalSpace
-import com.university.androidchatbot.loginRoute
+import com.university.androidchatbot.LOGIN_ROUTE
 import com.university.androidchatbot.viewmodel.LoginViewModel
 
 
@@ -131,7 +131,7 @@ fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
         Text(
             text = "Login Instead",
             modifier = Modifier.clickable(onClick = {
-                navController.navigate(loginRoute)
+                navController.navigate(LOGIN_ROUTE)
             })
         )
         VerticalSpace(10.dp)

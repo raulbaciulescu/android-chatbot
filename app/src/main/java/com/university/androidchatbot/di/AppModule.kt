@@ -15,6 +15,7 @@ import com.university.androidchatbot.api.MessageApi
 import com.university.androidchatbot.api.MessageDataSource
 import com.university.androidchatbot.api.SpeechRecognitionApi
 import com.university.androidchatbot.api.SpeechRecognitionDataSource
+import com.university.androidchatbot.viewmodel.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,7 +71,7 @@ object AppModule {
         gsonFactory: GsonConverterFactory
     ): SpeechRecognitionApi {
         return Retrofit.Builder()
-            .baseUrl("http://$IP:5000/")
+            .baseUrl("http://$IP:8080/")
             .client(okHttpClient)
             .addConverterFactory(gsonFactory)
             .build()
@@ -99,9 +100,9 @@ object AppModule {
     @Singleton
     fun provideAuthRepository(
         authDataSource: AuthDataSource,
-        tokenInterceptor: TokenInterceptor
+        sessionManager: SessionManager
     ): AuthRepository {
-        return AuthRepository(authDataSource, tokenInterceptor)
+        return AuthRepository(authDataSource, sessionManager)
     }
 
     @Provides
@@ -112,8 +113,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTokenInterceptor(): TokenInterceptor {
-        return TokenInterceptor()
+    fun provideTokenInterceptor(sessionManager: SessionManager): TokenInterceptor {
+        return TokenInterceptor(sessionManager)
     }
 
     @Provides

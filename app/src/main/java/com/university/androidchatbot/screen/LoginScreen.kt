@@ -38,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.university.androidchatbot.R
 import com.university.androidchatbot.components.VerticalSpace
-import com.university.androidchatbot.registerRoute
+import com.university.androidchatbot.REGISTER_ROUTE
 import com.university.androidchatbot.viewmodel.LoginViewModel
 
 val TAG = "LoginScreen"
@@ -121,7 +121,7 @@ fun LoginScreen(
         Text(
             text = "Create An Account",
             modifier = Modifier.clickable(onClick = {
-                navController.navigate(registerRoute)
+                navController.navigate(REGISTER_ROUTE)
             })
         )
         VerticalSpace(20.dp)

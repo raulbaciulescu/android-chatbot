@@ -3,37 +3,54 @@ package com.university.androidchatbot
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.university.androidchatbot.screen.HomeScreen
 import com.university.androidchatbot.screen.LoginScreen
 import com.university.androidchatbot.screen.RegisterScreen
-import com.university.androidchatbot.viewmodel.UserPreferencesViewModel
-import com.university.androidchatbot.screen.HomeScreen
+import com.university.androidchatbot.screen.SplashScreen
 import com.university.androidchatbot.todo.v1.Util
 import com.university.androidchatbot.viewmodel.MyAppViewModel
+import com.university.androidchatbot.viewmodel.SplashViewModel
+import kotlinx.coroutines.delay
 
-
-const val loginRoute = "auth"
-const val registerRoute = "register"
+const val LOGIN_ROUTE = "auth"
+const val REGISTER_ROUTE = "register"
+val HOME_ROUTE = "chat/0"
+private const val SPLASH_ROUTE = "splash"
 
 @Composable
 fun MyAppNavHost() {
     val navController = rememberNavController()
-    val userPreferencesViewModel = hiltViewModel<UserPreferencesViewModel>()
-    val userPreferencesUiState = userPreferencesViewModel.uiState
-    val myAppViewModel = hiltViewModel<MyAppViewModel>()
-    val chatId = myAppViewModel.chatId
+    val myAppViewModel: MyAppViewModel = hiltViewModel()
+    val chatId = Util.chatId
 
     NavHost(
         navController = navController,
-        startDestination = loginRoute
+        startDestination = SPLASH_ROUTE
     ) {
-        composable(route = loginRoute)
-        {
+        composable(route = SPLASH_ROUTE) {
+            val viewModel: SplashViewModel = hiltViewModel()
+            val startDestination by viewModel.targetDestination.collectAsStateWithLifecycle()
+
+            LaunchedEffect(startDestination) {
+                startDestination?.let {
+                    delay(1000)
+                    navController.navigate(it) {
+                        popUpTo(SPLASH_ROUTE) { inclusive = true }
+                    }
+                }
+            }
+
+            SplashScreen()
+        }
+        composable(route = LOGIN_ROUTE) {
             LoginScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
@@ -42,8 +59,7 @@ fun MyAppNavHost() {
                 navController = navController
             )
         }
-        composable(route = registerRoute)
-        {
+        composable(route = REGISTER_ROUTE) {
             RegisterScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
@@ -55,22 +71,18 @@ fun MyAppNavHost() {
         composable(
             route = "chat/{chatId}",
             arguments = listOf(navArgument("chatId") { type = NavType.IntType })
-        )
-        {
+        ) {
             HomeScreen(
                 chatId = chatId,
                 navigate = { chatId ->
-                    myAppViewModel.chatId = chatId
                     Util.chatId = chatId
                     navController.navigate("chat/$chatId")
                 },
                 onNewChatClick = {
-                    myAppViewModel.chatId = 0
                     Util.chatId = 0
                     navController.navigate("chat/0")
                 },
                 onNewChatWithPdfClick = { path ->
-                    myAppViewModel.chatId = 0
                     Util.chatId = 0
                     Util.pdfPath = path
                     println("nav host " + Util.pdfPath)
@@ -78,22 +90,10 @@ fun MyAppNavHost() {
                 },
                 onLogoutClick = {
                     myAppViewModel.logout()
-                    navController.navigate(loginRoute)
+                    Util.chatId = 0
+                    navController.navigate(LOGIN_ROUTE)
                 }
             )
-        }
-    }
-
-    LaunchedEffect(userPreferencesUiState.token) {
-        if (userPreferencesUiState.token.isNotEmpty()) {
-            Log.d(
-                "MyAppNavHost",
-                "Launched effect navigate to items " + userPreferencesUiState.token
-            )
-            myAppViewModel.setToken(userPreferencesUiState.token)
-            navController.navigate("chat/${chatId}") {
-                popUpTo(0)
-            }
         }
     }
 }
