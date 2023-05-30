@@ -16,9 +16,6 @@
 package com.university.androidchatbot
 
 import android.app.Application
-import android.content.Context
-import android.util.Log
-import com.university.androidchatbot.core.data.TAG
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

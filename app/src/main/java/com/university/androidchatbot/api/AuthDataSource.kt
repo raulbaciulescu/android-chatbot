@@ -1,7 +1,7 @@
 package com.university.androidchatbot.api
 
-import com.university.androidchatbot.data.LoginRequest
-import com.university.androidchatbot.data.RegisterRequest
+import com.university.androidchatbot.data.dto.LoginRequest
+import com.university.androidchatbot.data.dto.RegisterRequest
 import com.university.androidchatbot.data.TokenHolder
 import retrofit2.http.Body
 import retrofit2.http.Headers

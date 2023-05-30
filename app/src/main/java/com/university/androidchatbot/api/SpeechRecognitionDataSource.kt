@@ -1,6 +1,6 @@
 package com.university.androidchatbot.api
 
-import com.university.androidchatbot.data.SpeechToTextResponse
+import com.university.androidchatbot.data.dto.SpeechToTextResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.http.GET

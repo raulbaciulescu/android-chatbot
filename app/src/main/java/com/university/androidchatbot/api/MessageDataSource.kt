@@ -2,7 +2,7 @@ package com.university.androidchatbot.api
 
 import com.university.androidchatbot.data.Chat
 import com.university.androidchatbot.data.Message
-import com.university.androidchatbot.data.MessageWithPdf
+import com.university.androidchatbot.data.dto.MessageWithPdfRequest
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -41,7 +41,7 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
         return messageApi.saveMessage(message)
     }
 
-    suspend fun sendMessageWithPdf(message: MessageWithPdf): Message {
+    suspend fun sendMessageWithPdf(message: MessageWithPdfRequest): Message {
         return messageApi.saveMessageWithPdf(message.text, message.file)
     }
 
