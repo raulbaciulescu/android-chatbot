@@ -26,22 +26,27 @@ import com.university.androidchatbot.data.MessageType
 import com.university.androidchatbot.utils.conditional
 import com.university.androidchatbot.feature.chat.ui.MessageViewModel
 
+val BotChatBubbleShape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 20.dp)
+val AuthorChatBubbleShape = RoundedCornerShape(20.dp, 0.dp, 20.dp, 20.dp)
 
 @Composable
 fun ChatSection(
     modifier: Modifier = Modifier,
+    messageViewModel: MessageViewModel = hiltViewModel(),
     chatId: Int
 ) {
     val listState = rememberLazyListState()
-    val messageViewModel = hiltViewModel<MessageViewModel>()
     val state = messageViewModel.state
+    val messageState = messageViewModel.messageState
 
     LazyColumn(
         state = listState,
-        modifier = modifier
-            .padding(horizontal = 16.dp),
+        modifier = modifier.padding(horizontal = 16.dp),
         reverseLayout = true
     ) {
+        if (messageState.isLoading) {
+            item { LoadingMessageItem() }
+        }
         item {
             if (state.isLoading) {
                 Row(
@@ -54,7 +59,6 @@ fun ChatSection(
                 }
             }
         }
-        item { VerticalSpace(16.dp)}
         itemsIndexed(state.items) { index, message ->
             if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
                 messageViewModel.loadNextItems(chatId)
@@ -67,14 +71,10 @@ fun ChatSection(
         }
     }
 
-
-    LaunchedEffect(state.items) {
+    LaunchedEffect(messageState.createMessage) {
         listState.scrollToItem(if (state.items.isNotEmpty()) 0 else 0)
     }
 }
-
-private val BotChatBubbleShape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 20.dp)
-private val AuthorChatBubbleShape = RoundedCornerShape(20.dp, 0.dp, 20.dp, 20.dp)
 
 @Composable
 fun MessageItem(isLast: Boolean, messageText: String, type: MessageType) {

@@ -2,11 +2,8 @@ package com.university.androidchatbot.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
-
-val primaryColor = Color(0xFF7048B6)
-val backgroundColor = Color(0xFF343541)
-val backgroundSecondaryColor = Color(0xFF343541)
+val Purple673 = Color(0xFF673AB7)
+val PrimaryPurple = Color(0xFF7048B6)
+val BackgroundGrey = Color(0xFF343541)
+val BackgroundSecondaryGrey = Color(0xFF343541)

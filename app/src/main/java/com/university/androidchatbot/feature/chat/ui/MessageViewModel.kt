@@ -25,11 +25,18 @@ data class ScreenState(
     val page: Int = 0
 )
 
+data class MessageState(
+    val isLoading: Boolean = false,
+    val createMessage: Int = 0
+)
+
 @HiltViewModel
 class MessageViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
 ) : ViewModel() {
     var state by mutableStateOf(ScreenState())
+    var messageState by mutableStateOf(MessageState())
+
     private val paginator = DefaultPaginator(
         initialKey = state.page,
         onLoadUpdated = {
@@ -71,9 +78,11 @@ class MessageViewModel @Inject constructor(
         state = state.copy(
             items = listOf(message) + state.items,
         )
+        messageState = messageState.copy(isLoading = true, createMessage = messageState.createMessage + 1)
         viewModelScope.launch {
             receivedMessage = messageRepository.sendMessage(message)
             Util.chatId = receivedMessage.chatId
+            messageState = messageState.copy(isLoading = false, createMessage = messageState.createMessage + 1)
             state = state.copy(
                 items = listOf(receivedMessage) + state.items.stream().map { item -> item.copy(chatId = Util.chatId) }.toList(),
             )

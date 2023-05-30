@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.university.androidchatbot.R
 import com.university.androidchatbot.ui.theme.AndroidChatbotTheme
-import com.university.androidchatbot.ui.theme.primaryColor
+import com.university.androidchatbot.ui.theme.PrimaryPurple
 
 @Composable
 fun IconTextButton(
@@ -73,7 +73,7 @@ fun PressableButton(
         shape = CircleShape,
         onClick = { },
         interactionSource = interactionSource,
-        containerColor = primaryColor
+        containerColor = PrimaryPurple
     ) {
         Icon(
             modifier = Modifier.size(25.dp),
@@ -110,7 +110,7 @@ fun FloatingButton(
     FloatingActionButton(
         shape = CircleShape,
         onClick = onClick,
-        containerColor = primaryColor,
+        containerColor = PrimaryPurple,
         modifier = modifier
             .size(if (isPressed.value) pressedSize else initialSize),
     ) {
