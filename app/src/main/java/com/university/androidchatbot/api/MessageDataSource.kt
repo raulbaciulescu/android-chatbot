@@ -5,6 +5,7 @@ import com.university.androidchatbot.data.Message
 import com.university.androidchatbot.data.dto.MessageWithPdfRequest
 import okhttp3.MultipartBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
@@ -34,6 +35,10 @@ interface MessageApi {
     @Multipart
     @POST("/pdf-messages")
     suspend fun saveMessageWithPdf(@Part text: MultipartBody.Part, @Part file: MultipartBody.Part): Message
+
+    @Headers("Content-Type: application/json")
+    @DELETE("/chats/{chatId}")
+    suspend fun delete(@Path("chatId") chatId: Int)
 }
 
 class MessageDataSource @Inject constructor(private val messageApi: MessageApi) {
@@ -63,5 +68,9 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
         } catch (e: Exception) {
             Result.success(emptyList())
         }
+    }
+
+    suspend fun deleteChat(chatId: Int) {
+        messageApi.delete(chatId)
     }
 }

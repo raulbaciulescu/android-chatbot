@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,10 +32,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
+import com.maxkeppeker.sheets.core.models.base.IconSource
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.input.InputDialog
+import com.maxkeppeler.sheets.input.models.InputHeader
+import com.maxkeppeler.sheets.input.models.InputSelection
+import com.maxkeppeler.sheets.input.models.InputTextField
+import com.maxkeppeler.sheets.input.models.ValidationResult
 import com.university.androidchatbot.R
 import com.university.androidchatbot.data.Chat
-import com.university.androidchatbot.utils.UriPathFinder
 import com.university.androidchatbot.feature.chat.ui.ChatViewModel
+import com.university.androidchatbot.utils.UriPathFinder
+import com.university.androidchatbot.utils.Util
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.TextField
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.input.InputDialog
+import com.maxkeppeler.sheets.input.models.InputText
 
 @Composable
 fun DrawerScreen(
@@ -51,7 +67,7 @@ fun DrawerScreen(
         )
         DrawerBody(
             modifier = Modifier.fillMaxHeight(.85f),
-            items = chatViewModel.chats,
+            viewModel = chatViewModel,
             onItemClick = {
                 navigate(it.id)
             }
@@ -108,29 +124,34 @@ fun DrawerHeader(
             )
             FilePicker(show = showFilePicker, fileExtensions = listOf("pdf")) { path ->
                 showFilePicker = false
-                val myPath = uriPathFinder.handleUri(application.applicationContext, Uri.parse(path!!.path))
+                val myPath =
+                    uriPathFinder.handleUri(application.applicationContext, Uri.parse(path!!.path))
                 onNewChatWithPdfClick(myPath!!)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerBody(
-    items: List<Chat>,
     modifier: Modifier = Modifier,
+    viewModel: ChatViewModel = hiltViewModel(),
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-    onItemClick: (Chat) -> Unit
+    onItemClick: (Chat) -> Unit,
 ) {
+    var uiState = viewModel.chatUiState
+
     LazyColumn(modifier) {
-        items(items) { item ->
+        items(uiState.items) { item ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
                         onItemClick(item)
                     }
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     painter = painterResource(if (item.filename == null) R.drawable.ic_message else R.drawable.ic_pdf),

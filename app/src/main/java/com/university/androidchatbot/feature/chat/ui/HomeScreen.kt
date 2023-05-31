@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.university.androidchatbot.HOME_ROUTE
 import com.university.androidchatbot.components.DrawerScreen
 import kotlinx.coroutines.launch
 
@@ -30,7 +31,7 @@ fun HomeScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet(modifier = Modifier.fillMaxWidth(.7f)) {
+            ModalDrawerSheet(modifier = Modifier.fillMaxWidth(.8f)) {
                 DrawerScreen(
                     chatViewModel = chatViewModel,
                     onNewChatClick = onNewChatClick,
@@ -45,12 +46,16 @@ fun HomeScreen(
         },
         content = {
             ChatScreen(
-                chatTitle = chatViewModel.chats.find { it.id == chatId }?.title,
+                chatTitle = chatViewModel.chatUiState.items.find { it.id == chatId }?.title,
                 chatId = chatId,
                 open = {
                     scope.launch {
                         drawerState.open()
                     }
+                },
+                onDeleteChat = {
+                    chatViewModel.deleteChat()
+                    navigate(0)
                 }
             )
         }

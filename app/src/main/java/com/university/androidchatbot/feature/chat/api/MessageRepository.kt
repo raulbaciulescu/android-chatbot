@@ -50,4 +50,8 @@ class MessageRepository @Inject constructor(
     suspend fun getMessages(chatId: Int, page: Int): Result<List<Message>> {
         return messageDataSource.getMessages(chatId, page)
     }
+
+    suspend fun deleteChat(chatId: Int) {
+        messageDataSource.deleteChat(chatId)
+    }
 }
