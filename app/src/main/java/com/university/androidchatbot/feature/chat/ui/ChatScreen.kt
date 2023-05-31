@@ -2,6 +2,7 @@ package com.university.androidchatbot.feature.chat.ui
 
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,6 +12,7 @@ import com.university.androidchatbot.components.AppBar
 import com.university.androidchatbot.components.ChatSection
 import com.university.androidchatbot.components.MessageSection
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     chatTitle: String? = "",

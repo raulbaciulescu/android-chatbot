@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import com.university.androidchatbot.utils.Util
 import com.university.androidchatbot.viewmodel.SpeechRecognitionViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessageSection(
     onSendMessage: (String) -> Unit,

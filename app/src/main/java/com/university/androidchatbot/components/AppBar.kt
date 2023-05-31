@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -17,14 +18,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.maxkeppeker.sheets.core.models.base.IconSource
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.input.InputDialog
+import com.maxkeppeler.sheets.input.models.InputHeader
+import com.maxkeppeler.sheets.input.models.InputSelection
+import com.maxkeppeler.sheets.input.models.InputTextField
+import com.maxkeppeler.sheets.input.models.ValidationResult
 import com.university.androidchatbot.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     chatTitle: String,
     onNavigationIconClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
+    val inputOptions = listOf(
+        InputTextField(
+            header = InputHeader(
+                title = "Can you tell me your first name?",
+            ),
+            validationListener = { value ->
+                if ((value?.length ?: 0) >= 3) ValidationResult.Valid
+                else ValidationResult.Invalid("Name needs to be at least 3 letters long")
+            }
+        )
+    )
+    var state = rememberUseCaseState()
+    InputDialog(
+        state = state,
+        selection = InputSelection(
+            input = inputOptions,
+            onPositiveClick = { result ->
+                // Handle selection
+            },
+        )
+    )
+
     Row(
         modifier = Modifier
             .padding(horizontal = 10.dp)
@@ -48,7 +79,7 @@ fun AppBar(
             IconButton(
                 modifier = Modifier.size(26.dp),
                 onClick = {
-                    //inputState.show()
+                    state.show()
                 }) {
                 Icon(
                     painter = painterResource(R.drawable.ic_edit),
