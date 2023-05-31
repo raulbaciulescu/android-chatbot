@@ -35,6 +35,7 @@ val Context.userPreferencesDataStore by preferencesDataStore(
 //const val IP = "192.168.10.238"
 const val IP = "192.168.161.154"
 //const val IP = "192.168.100.24"
+//const val IP = "https://gepeto-java-backend-c3rsmdwhta-lm.a.run.app"
 
 @Module
 @InstallIn(SingletonComponent::class)
