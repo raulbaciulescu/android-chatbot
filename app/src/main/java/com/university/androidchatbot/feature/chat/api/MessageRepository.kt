@@ -6,6 +6,7 @@ import com.university.androidchatbot.api.MessageDataSource
 import com.university.androidchatbot.data.Chat
 import com.university.androidchatbot.data.Message
 import com.university.androidchatbot.data.dto.MessageWithPdfRequest
+import com.university.androidchatbot.utils.Util
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
@@ -14,9 +15,7 @@ import javax.inject.Inject
 
 class MessageRepository @Inject constructor(
     private val messageDataSource: MessageDataSource,
-    private val gson: Gson,
-    private val application: Application
-    ) {
+) {
     suspend fun getMessages(chatId: Int): List<Message> {
         return messageDataSource.getMessages(chatId)
     }
@@ -53,5 +52,9 @@ class MessageRepository @Inject constructor(
 
     suspend fun deleteChat(chatId: Int) {
         messageDataSource.deleteChat(chatId)
+    }
+
+    suspend fun updateChat(chatTitle: String) {
+        messageDataSource.updateChat(Chat(title = chatTitle, id = Util.chatId, filename = ""))
     }
 }

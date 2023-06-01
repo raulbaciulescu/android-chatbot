@@ -45,10 +45,30 @@ class ChatViewModel @Inject constructor(
 
     fun deleteChat() {
         viewModelScope.launch {
-            _chatUiState = _chatUiState.copy(isLoading = false, items = _chatUiState.items.toMutableList().apply {
-                removeIf { c -> c.id == Util.chatId }
-            })
+            _chatUiState = _chatUiState.copy(
+                isLoading = false,
+                items = _chatUiState.items.toMutableList().apply {
+                    removeIf { c -> c.id == Util.chatId }
+                }
+            )
             messageRepository.deleteChat(Util.chatId)
+        }
+    }
+
+    fun updateChat(chatTitle: String) {
+        viewModelScope.launch {
+            _chatUiState = _chatUiState.copy(
+                isLoading = false,
+                items = _chatUiState.items.toMutableList().apply {
+                    map { chat ->
+                        if (chat.id == Util.chatId) {
+                            chat.title = chatTitle
+                        }
+                        chat
+                    }
+                }
+            )
+            messageRepository.updateChat(chatTitle)
         }
     }
 }

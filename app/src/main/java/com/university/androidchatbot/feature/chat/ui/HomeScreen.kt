@@ -58,6 +58,9 @@ fun HomeScreen(
                 onDeleteChat = {
                     chatViewModel.deleteChat()
                     navigate(0)
+                },
+                onUpdateClick = { chatTitle ->
+                    chatViewModel.updateChat(chatTitle)
                 }
             )
         }

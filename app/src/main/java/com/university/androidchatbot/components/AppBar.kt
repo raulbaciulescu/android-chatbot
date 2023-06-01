@@ -32,30 +32,33 @@ import com.university.androidchatbot.R
 fun AppBar(
     chatTitle: String,
     onNavigationIconClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onUpdateClick: (String) -> Unit
 ) {
+    var state = rememberUseCaseState()
+
     val inputOptions = listOf(
         InputTextField(
             header = InputHeader(
-                title = "Can you tell me your first name?",
+                title = "Write the new chat name:",
             ),
             validationListener = { value ->
                 if ((value?.length ?: 0) >= 3) ValidationResult.Valid
-                else ValidationResult.Invalid("Name needs to be at least 3 letters long")
+                else ValidationResult.Invalid("Chat name needs to be at least 3 letters long")
             }
         )
     )
-    var state = rememberUseCaseState()
+
     InputDialog(
         state = state,
         selection = InputSelection(
             input = inputOptions,
             onPositiveClick = { result ->
-                // Handle selection
+                onUpdateClick(result.getString("0")!!)
+                state.finish()
             },
         )
     )
-
     Row(
         modifier = Modifier
             .padding(horizontal = 10.dp)

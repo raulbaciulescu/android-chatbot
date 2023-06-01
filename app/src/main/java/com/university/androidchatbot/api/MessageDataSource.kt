@@ -10,6 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import javax.inject.Inject
@@ -39,6 +40,10 @@ interface MessageApi {
     @Headers("Content-Type: application/json")
     @DELETE("/chats/{chatId}")
     suspend fun delete(@Path("chatId") chatId: Int)
+
+    @Headers("Content-Type: application/json")
+    @PUT("/chats")
+    suspend fun update(@Body chat: Chat)
 }
 
 class MessageDataSource @Inject constructor(private val messageApi: MessageApi) {
@@ -72,5 +77,9 @@ class MessageDataSource @Inject constructor(private val messageApi: MessageApi) 
 
     suspend fun deleteChat(chatId: Int) {
         messageApi.delete(chatId)
+    }
+
+    suspend fun updateChat(chat: Chat) {
+        messageApi.update(chat)
     }
 }

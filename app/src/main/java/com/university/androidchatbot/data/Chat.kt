@@ -2,6 +2,6 @@ package com.university.androidchatbot.data
 
 data class Chat(
     val id: Int,
-    val title: String,
+    var title: String,
     val filename: String
 )

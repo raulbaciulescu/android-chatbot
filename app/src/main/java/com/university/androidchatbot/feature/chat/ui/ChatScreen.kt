@@ -19,7 +19,8 @@ fun ChatScreen(
     chatId: Int,
     messageViewModel: MessageViewModel = hiltViewModel(),
     open: () -> Unit,
-    onDeleteChat: () -> Unit
+    onDeleteChat: () -> Unit,
+    onUpdateClick: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -28,7 +29,8 @@ fun ChatScreen(
                 onNavigationIconClick = {
                     open()
                 },
-                onDeleteClick = onDeleteChat
+                onDeleteClick = onDeleteChat,
+                onUpdateClick = onUpdateClick
             )
         },
         bottomBar = {
