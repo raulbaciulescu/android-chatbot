@@ -9,9 +9,12 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.university.androidchatbot.HOME_ROUTE
 import com.university.androidchatbot.components.DrawerScreen
 import kotlinx.coroutines.launch
@@ -25,8 +28,9 @@ fun HomeScreen(
     onNewChatClick: () -> Unit,
     onNewChatWithPdfClick: (String) -> Unit,
     onLogoutClick: () -> Unit,
-    chatViewModel: ChatViewModel = hiltViewModel()
+    chatViewModel: ChatViewModel
 ) {
+    val uiState by chatViewModel.chatUiState.collectAsState()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -48,7 +52,7 @@ fun HomeScreen(
         },
         content = {
             ChatScreen(
-                chatTitle = chatViewModel.chatUiState.items.find { it.id == chatId }?.title,
+                chatTitle = uiState.currentChat?.title,
                 chatId = chatId,
                 open = {
                     scope.launch {

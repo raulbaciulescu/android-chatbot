@@ -3,6 +3,7 @@ package com.university.androidchatbot.di
 import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
+import com.darkrockstudios.libraries.mpfilepicker.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 //import com.university.androidchatbot.BuildConfig
@@ -145,11 +146,11 @@ object AppModule {
                 this.addInterceptor(tokenInterceptor)
             }
             .apply {
-//                if (BuildConfig.DEBUG) {
-//                    val interceptor = HttpLoggingInterceptor()
-//                    interceptor.level = HttpLoggingInterceptor.Level.BODY
-//                    addInterceptor(interceptor)
-//                }
+                if (BuildConfig.DEBUG) {
+                    val interceptor = HttpLoggingInterceptor()
+                    interceptor.level = HttpLoggingInterceptor.Level.BODY
+                    addInterceptor(interceptor)
+                }
             }
             .build()
     }

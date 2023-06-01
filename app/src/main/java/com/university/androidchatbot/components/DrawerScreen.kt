@@ -46,13 +46,15 @@ import com.university.androidchatbot.utils.UriPathFinder
 import com.university.androidchatbot.utils.Util
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.input.InputDialog
 import com.maxkeppeler.sheets.input.models.InputText
 
 @Composable
 fun DrawerScreen(
-    chatViewModel: ChatViewModel = hiltViewModel(),
+    chatViewModel: ChatViewModel,
     onNewChatClick: () -> Unit,
     onNewChatWithPdfClick: (String) -> Unit,
     onLogoutClick: () -> Unit,
@@ -140,7 +142,7 @@ fun DrawerBody(
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
     onItemClick: (Chat) -> Unit,
 ) {
-    var uiState = viewModel.chatUiState
+    val uiState by viewModel.chatUiState.collectAsState()
 
     LazyColumn(modifier) {
         items(uiState.items) { item ->

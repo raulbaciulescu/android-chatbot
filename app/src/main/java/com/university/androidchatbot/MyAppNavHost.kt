@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.university.androidchatbot.feature.chat.ui.HomeScreen
 import com.university.androidchatbot.feature.authentication.ui.login.LoginScreen
 import com.university.androidchatbot.feature.authentication.ui.register.RegisterScreen
+import com.university.androidchatbot.feature.chat.ui.ChatViewModel
 import com.university.androidchatbot.feature.splash.ui.SplashScreen
 import com.university.androidchatbot.utils.Util
 import com.university.androidchatbot.viewmodel.MyAppViewModel
@@ -29,6 +30,7 @@ private const val SPLASH_ROUTE = "splash"
 fun MyAppNavHost() {
     val navController = rememberNavController()
     val myAppViewModel: MyAppViewModel = hiltViewModel()
+    val chatViewModel: ChatViewModel = hiltViewModel()
     val chatId = Util.chatId
 
     NavHost(
@@ -76,6 +78,7 @@ fun MyAppNavHost() {
                 chatId = chatId,
                 navigate = { chatId ->
                     Util.chatId = chatId
+                    chatViewModel.selectChat(chatId)
                     navController.navigate("chat/$chatId")
                 },
                 onNewChatClick = {
@@ -92,7 +95,8 @@ fun MyAppNavHost() {
                     myAppViewModel.logout()
                     Util.chatId = 0
                     navController.navigate(LOGIN_ROUTE)
-                }
+                },
+                chatViewModel = chatViewModel
             )
         }
     }

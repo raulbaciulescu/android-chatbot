@@ -65,7 +65,6 @@ fun PressableButton(
     val isPressed by interactionSource.collectIsPressedAsState()
     var isBegin by remember { mutableStateOf(true) }
     var initial by rememberSaveable { mutableStateOf(false) }
-
     val buttonSize by animateDpAsState(targetValue = if (isPressed) pressedSize else initialSize)
 
     FloatingActionButton(
@@ -102,25 +101,19 @@ fun FloatingButton(
     modifier: Modifier = Modifier,
     painter: Painter,
     onClick: () -> Unit,
-    initialSize: Dp = 56.dp,
-    pressedSize: Dp = 72.dp,
 ) {
-    val isPressed = remember { mutableStateOf(false) }
-
     FloatingActionButton(
         shape = CircleShape,
         onClick = onClick,
         containerColor = PrimaryPurple,
-        modifier = modifier
-            .size(if (isPressed.value) pressedSize else initialSize),
+        modifier = modifier.size(56.dp),
     ) {
 
         Icon(
             painter = painter,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .size(25.dp)
+            modifier = Modifier.size(25.dp)
         )
     }
 }

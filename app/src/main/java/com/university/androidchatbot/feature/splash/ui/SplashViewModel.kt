@@ -28,6 +28,7 @@ internal class SplashViewModel @Inject constructor(
             if (token.isNullOrEmpty()) {
                 _targetDestination.value = LOGIN_ROUTE
             } else {
+                println("home_route")
                 _targetDestination.value = HOME_ROUTE
             }
         }

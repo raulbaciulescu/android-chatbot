@@ -3,6 +3,7 @@ package com.university.androidchatbot.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -77,7 +78,7 @@ fun AppBar(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        HorizontalSpace(size = 100.dp)
+        Spacer(modifier = Modifier.weight(1f))
         if (chatTitle != "") {
             IconButton(
                 modifier = Modifier.size(26.dp),

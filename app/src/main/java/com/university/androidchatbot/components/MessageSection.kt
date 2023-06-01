@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.R
+import com.university.androidchatbot.feature.chat.ui.MessageViewModel
 import com.university.androidchatbot.utils.Util
 import com.university.androidchatbot.viewmodel.SpeechRecognitionViewModel
 
@@ -30,6 +31,7 @@ fun MessageSection(
     onSendMessage: (String) -> Unit,
     onSendPdfMessage: (String, String) -> Unit,
     speechRecognitionViewModel: SpeechRecognitionViewModel = hiltViewModel(),
+    messageViewModel: MessageViewModel = hiltViewModel(),
 ) {
     var timeOfTouch: Long = 0
     var timeOfRelease: Long
@@ -92,14 +94,16 @@ fun MessageSection(
                     .padding(horizontal = 10.dp),
                 painter = painterResource(id = R.drawable.ic_send),
                 onClick = {
-                    println("message section " + Util.pdfPath)
-                    if (Util.pdfPath != "") {
-                        onSendPdfMessage(speechRecognitionViewModel.message, Util.pdfPath)
-                        Util.pdfPath = ""
-                    } else {
-                        onSendMessage(speechRecognitionViewModel.message)
+                    if (!messageViewModel.messageState.isLoading) {
+                        println("message section " + Util.pdfPath)
+                        if (Util.pdfPath != "") {
+                            onSendPdfMessage(speechRecognitionViewModel.message, Util.pdfPath)
+                            Util.pdfPath = ""
+                        } else {
+                            onSendMessage(speechRecognitionViewModel.message)
+                        }
+                        speechRecognitionViewModel.message = ""
                     }
-                    speechRecognitionViewModel.message = ""
                 }
             )
     }

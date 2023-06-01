@@ -1,5 +1,6 @@
 package com.university.androidchatbot.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,11 +21,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.university.androidchatbot.R
 import com.university.androidchatbot.data.MessageType
-import com.university.androidchatbot.utils.conditional
 import com.university.androidchatbot.feature.chat.ui.MessageViewModel
+import com.university.androidchatbot.utils.conditional
 
 val BotChatBubbleShape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 20.dp)
 val AuthorChatBubbleShape = RoundedCornerShape(20.dp, 0.dp, 20.dp, 20.dp)
@@ -39,35 +44,60 @@ fun ChatSection(
     val state = messageViewModel.state
     val messageState = messageViewModel.messageState
 
-    LazyColumn(
-        state = listState,
-        modifier = modifier.padding(horizontal = 16.dp),
-        reverseLayout = true
-    ) {
-        if (messageState.isLoading) {
-            item { LoadingMessageItem() }
+    if (state.items.isEmpty())
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth(.8f)
+        ) {
+            Image(
+                painter = painterResource(R.drawable.il_sign),
+                contentDescription = null
+            )
+            Text(
+                text = "Gepeto",
+                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
+                color = Color.White
+            )
+            VerticalSpace(size = 12.dp)
+            Text(
+//                modifier = Modifier.fillMaxWidth(0.8f),
+                text = "Bla bla lb albla safa",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
         }
-        item {
-            if (state.isLoading) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator()
+    else {
+        LazyColumn(
+            state = listState,
+            modifier = modifier.padding(horizontal = 16.dp),
+            reverseLayout = true
+        ) {
+            if (messageState.isLoading) {
+                item { LoadingMessageItem() }
+            }
+            item {
+                if (state.isLoading) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
-        }
-        itemsIndexed(state.items) { index, message ->
-            if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
-                messageViewModel.loadNextItems(chatId)
+            itemsIndexed(state.items) { index, message ->
+                if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
+                    messageViewModel.loadNextItems(chatId)
+                }
+                MessageItem(
+                    messageText = message.text,
+                    type = message.type,
+                    isLast = index == state.items.lastIndex
+                )
             }
-            MessageItem(
-                messageText = message.text,
-                type = message.type,
-                isLast = index == state.items.lastIndex
-            )
         }
     }
 
