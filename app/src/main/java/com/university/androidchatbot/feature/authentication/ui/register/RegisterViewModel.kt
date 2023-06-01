@@ -11,7 +11,7 @@ import com.university.androidchatbot.data.dto.RegisterRequest
 import com.university.androidchatbot.data.UserPreferences
 import com.university.androidchatbot.feature.authentication.ui.login.LoginUiState
 import com.university.androidchatbot.feature.authentication.api.AuthRepository
-import com.university.androidchatbot.preferences.UserPreferencesRepository
+import com.university.androidchatbot.repository.UserPreferencesRepository
 import com.university.androidchatbot.feature.authentication.ui.login.TAG
 import com.university.androidchatbot.utils.ValidatorUtil
 import dagger.hilt.android.lifecycle.HiltViewModel

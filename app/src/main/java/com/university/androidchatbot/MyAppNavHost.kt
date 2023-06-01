@@ -11,14 +11,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.university.androidchatbot.feature.chat.ui.HomeScreen
+import com.university.androidchatbot.feature.home.HomeScreen
 import com.university.androidchatbot.feature.authentication.ui.login.LoginScreen
 import com.university.androidchatbot.feature.authentication.ui.register.RegisterScreen
-import com.university.androidchatbot.feature.chat.ui.ChatViewModel
-import com.university.androidchatbot.feature.splash.ui.SplashScreen
+import com.university.androidchatbot.feature.chat.ChatViewModel
+import com.university.androidchatbot.feature.splash.SplashScreen
 import com.university.androidchatbot.utils.Util
 import com.university.androidchatbot.viewmodel.MyAppViewModel
-import com.university.androidchatbot.feature.splash.ui.SplashViewModel
+import com.university.androidchatbot.feature.splash.SplashViewModel
 import kotlinx.coroutines.delay
 
 const val LOGIN_ROUTE = "auth"

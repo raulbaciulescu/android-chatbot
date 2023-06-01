@@ -10,13 +10,13 @@ import com.google.gson.GsonBuilder
 import com.university.androidchatbot.feature.authentication.api.AuthRepository
 import com.university.androidchatbot.api.AuthApi
 import com.university.androidchatbot.api.AuthDataSource
-import com.university.androidchatbot.preferences.TokenInterceptor
-import com.university.androidchatbot.preferences.UserPreferencesRepository
+import com.university.androidchatbot.api.interceptors.TokenInterceptor
+import com.university.androidchatbot.repository.UserPreferencesRepository
 import com.university.androidchatbot.api.MessageApi
 import com.university.androidchatbot.api.MessageDataSource
 import com.university.androidchatbot.api.SpeechRecognitionApi
 import com.university.androidchatbot.api.SpeechRecognitionDataSource
-import com.university.androidchatbot.feature.splash.ui.SessionManager
+import com.university.androidchatbot.feature.splash.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

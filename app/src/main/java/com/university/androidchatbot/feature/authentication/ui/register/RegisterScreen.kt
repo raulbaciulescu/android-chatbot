@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.university.androidchatbot.R
-import com.university.androidchatbot.components.VerticalSpace
+import com.university.androidchatbot.ui.components.VerticalSpace
 import com.university.androidchatbot.LOGIN_ROUTE
 import com.university.androidchatbot.feature.authentication.ui.login.TAG
 

@@ -4,7 +4,7 @@ import com.university.androidchatbot.api.AuthDataSource
 import com.university.androidchatbot.data.TokenHolder
 import com.university.androidchatbot.data.dto.LoginRequest
 import com.university.androidchatbot.data.dto.RegisterRequest
-import com.university.androidchatbot.feature.splash.ui.SessionManager
+import com.university.androidchatbot.feature.splash.SessionManager
 import javax.inject.Inject
 
 
