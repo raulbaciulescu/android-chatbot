@@ -1,5 +1,6 @@
 package com.university.androidchatbot.feature.drawer
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,21 +15,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import com.university.androidchatbot.R
-import com.university.androidchatbot.ui.components.DrawerHeader
 import com.university.androidchatbot.ui.components.HorizontalSpace
 import com.university.androidchatbot.ui.components.IconTextButton
+import com.university.androidchatbot.utils.UriPathFinder
 
 @Composable
 fun DrawerScreen2(
@@ -90,6 +94,45 @@ fun DrawerScreen2(
                 text = "Logout",
                 painter = painterResource(R.drawable.ic_logout)
             )
+        }
+    }
+}
+
+@Composable
+fun DrawerHeader(
+    onNewChatClick: () -> Unit,
+    onNewChatWithPdfClick: (String) -> Unit,
+) {
+    var showFilePicker by remember { mutableStateOf(false) }
+    val uriPathFinder = UriPathFinder()
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 30.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column {
+            IconTextButton(
+                modifier = Modifier.fillMaxWidth(.9f),
+                onClick = onNewChatClick,
+                text = "New chat",
+                painter = painterResource(R.drawable.ic_plus)
+            )
+            IconTextButton(
+                modifier = Modifier.fillMaxWidth(.9f),
+                onClick = {
+                    showFilePicker = true
+                },
+                text = "New chat with pdf",
+                painter = painterResource(R.drawable.ic_plus)
+            )
+            FilePicker(show = showFilePicker, fileExtensions = listOf("pdf")) { path ->
+                showFilePicker = false
+                val myPath = uriPathFinder.handleUri(context, Uri.parse(path!!.path))
+                onNewChatWithPdfClick(myPath!!)
+            }
         }
     }
 }

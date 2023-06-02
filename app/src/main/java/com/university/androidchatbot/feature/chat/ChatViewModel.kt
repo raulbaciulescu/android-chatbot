@@ -1,90 +1,155 @@
 package com.university.androidchatbot.feature.chat
 
-import android.app.Application
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.university.androidchatbot.data.Chat
+import com.university.androidchatbot.data.Message
+import com.university.androidchatbot.data.MessageType
 import com.university.androidchatbot.repository.MessageRepository
+import com.university.androidchatbot.utils.DefaultPaginator
 import com.university.androidchatbot.utils.Util
 import com.university.androidchatbot.utils.updateValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.streams.toList
 
-
-data class ChatUiState(
+data class ScreenState(
     val isLoading: Boolean = false,
-    val items: List<Chat> = mutableStateListOf(),
+    val isDeleted: Boolean = false,
+    val items: List<Message> = mutableStateListOf(),
     val error: String? = null,
-    var currentChat: Chat? = null
+    val endReached: Boolean = false,
+    val page: Int = 0,
+    val chatTitle: String = ""
 )
 
+data class MessageState(
+    val isLoading: Boolean = false,
+    val createMessage: Int = 0
+)
 
 @HiltViewModel
-class ChatViewModel @Inject constructor(
+class ChatViewModel2 @Inject constructor(
     private val messageRepository: MessageRepository,
-    val application: Application
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _chatUiState: MutableStateFlow<ChatUiState> = MutableStateFlow(ChatUiState())
-    val chatUiState: StateFlow<ChatUiState>
-        get() = _chatUiState.asStateFlow()
+    var chatId: Int = savedStateHandle["chatId"]!!
+    var state: MutableStateFlow<ScreenState> = MutableStateFlow(ScreenState())
+    var messageState by mutableStateOf(MessageState())
 
-    fun refreshChats() {
-        _chatUiState.updateValue { it.copy(isLoading = true) }
+    private val paginator = DefaultPaginator(
+        initialKey = state.value.page,
+        onLoadUpdated = {
+            state.updateValue { crtState -> crtState.copy(isLoading = it) }
+        },
+        onRequest = { chatId, nextPage ->
+            messageRepository.getMessages(chatId, nextPage)
+        },
+        getNextKey = {
+            state.value.page + 1
+        },
+        onError = {
+            state.updateValue { crtState -> crtState.copy(error = it?.localizedMessage) }
+        },
+        onSuccess = { items, newKey ->
+            state.updateValue { crtState ->
+                crtState.copy(
+                    items = (state.value.items + items).distinctBy { it.text },
+                    page = newKey,
+                    endReached = items.isEmpty()
+                )
+            }
+        }
+    )
+
+    init {
+        println("init chat")
+        loadChat()
+    }
+
+    fun loadMoreMessages() {
+        println("load more messages: " + chatId)
+        if (chatId != 0) {
+            viewModelScope.launch {
+                paginator.loadNextItems(chatId)
+            }
+        }
+    }
+
+    fun sendMessage(text: String) {
+        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
+        var receivedMessage: Message
+        state.updateValue { crtState ->
+            crtState.copy(
+                items = listOf(message) + state.value.items,
+            )
+        }
+        messageState = messageState.copy(isLoading = true, createMessage = messageState.createMessage + 1)
         viewModelScope.launch {
-            val result = messageRepository.getChats()
-            _chatUiState.updateValue { it.copy(isLoading = false, items = result) }
+            receivedMessage = messageRepository.sendMessage(message)
+            chatId = receivedMessage.chatId
+            messageState = messageState.copy(isLoading = false, createMessage = messageState.createMessage + 1)
+
+            state.updateValue {
+                it.copy(
+                    items = listOf(receivedMessage) + state.value.items.stream()
+                        .map { item -> item.copy(chatId = chatId) }.toList(),
+                )
+            }
+        }
+    }
+
+    fun onSendPdfMessage(text: String, path: String) {
+        val message = Message(text = text, type = MessageType.USER, chatId = chatId)
+        var receivedMessage: Message
+        state.updateValue {
+            it.copy(
+                items = listOf(message) + state.value.items,
+            )
+        }
+        messageState = messageState.copy(isLoading = true, createMessage = messageState.createMessage + 1)
+        viewModelScope.launch {
+            receivedMessage = messageRepository.sendMessageWithPdf(message, path)
+            chatId = receivedMessage.chatId
+            messageState = messageState.copy(isLoading = false, createMessage = messageState.createMessage + 1)
+            state.updateValue {
+                it.copy(
+                    items = listOf(receivedMessage) + state.value.items.stream()
+                        .map { item -> item.copy(chatId = chatId) }.toList(),
+                )
+            }
         }
     }
 
     fun deleteChat() {
         viewModelScope.launch {
-            _chatUiState.updateValue {
-                it.copy(
-                    isLoading = false,
-                    items = it.items.toMutableList().apply {
-                        removeIf { c -> c.id == Util.chatId }
-                    }
-                )
-            }
             messageRepository.deleteChat(Util.chatId)
+            state.updateValue { it.copy(isDeleted = true) }
         }
     }
 
     fun updateChat(chatTitle: String) {
         viewModelScope.launch {
-           val newChat = _chatUiState.value.items.firstOrNull { it.id == Util.chatId }
-            //it.currentChat?.copy(title = chatTitle),
-            println("rrrrrrr " + newChat)
-            println("rrrrrrr " + _chatUiState.value.currentChat)
-            _chatUiState.updateValue {
-                it.copy(
-                    currentChat = newChat?.copy(title = chatTitle),
-                    isLoading = false,
-                    items = it.items.toMutableList().apply {
-                        map { chat ->
-                            if (chat.id == Util.chatId) {
-                                chat.title = chatTitle
-                            }
-                            chat
-                        }
-                    }
-                )
-            }
+            state.updateValue { it.copy(chatTitle = chatTitle) }
             messageRepository.updateChat(chatTitle)
-            refreshChats()
         }
     }
 
-    fun selectChat(chatId: Int) {
-        _chatUiState.updateValue {
-            it.copy(
-                currentChat = it.items.firstOrNull { chat -> chat.id == chatId }
-            )
+    private fun loadChat() {
+        println("load chat: " + chatId)
+        viewModelScope.launch {
+            val newChatTitle =  messageRepository.getChats().firstOrNull { it.id == chatId }?.title ?: ""
+            state.updateValue {
+                it.copy(
+                    chatTitle = newChatTitle
+                )
+            }
         }
     }
 }
