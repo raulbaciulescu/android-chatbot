@@ -1,37 +1,42 @@
 package com.university.androidchatbot
 
 import android.util.Log
+import androidx.compose.material.Text
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.university.androidchatbot.feature.home.HomeScreen
 import com.university.androidchatbot.feature.authentication.ui.login.LoginScreen
 import com.university.androidchatbot.feature.authentication.ui.register.RegisterScreen
-import com.university.androidchatbot.feature.chat.ChatViewModel
+import com.university.androidchatbot.feature.chat.ChatScreen2
+import com.university.androidchatbot.feature.drawer.DrawerViewModel
 import com.university.androidchatbot.feature.splash.SplashScreen
 import com.university.androidchatbot.utils.Util
-import com.university.androidchatbot.viewmodel.MyAppViewModel
 import com.university.androidchatbot.feature.splash.SplashViewModel
+import com.university.androidchatbot.ui.components.MainBody
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+const val SPLASH_ROUTE = "splash"
 const val LOGIN_ROUTE = "auth"
 const val REGISTER_ROUTE = "register"
-val HOME_ROUTE = "chat/0"
-private const val SPLASH_ROUTE = "splash"
+const val HOME_ROUTE = "home"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyAppNavHost() {
     val navController = rememberNavController()
-    val myAppViewModel: MyAppViewModel = hiltViewModel()
-    val chatViewModel: ChatViewModel = hiltViewModel()
-    val chatId = Util.chatId
 
     NavHost(
         navController = navController,
@@ -52,52 +57,91 @@ fun MyAppNavHost() {
 
             SplashScreen()
         }
+
         composable(route = LOGIN_ROUTE) {
             LoginScreen(
-                onClose = {
-                    Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate("chat/${chatId}")
+                onRegisterClick = {
+                    navController.navigate(route = REGISTER_ROUTE)
                 },
-                navController = navController
+                onAuthenticationSuccessful = {
+                    Log.d("MyAppNavHost", "navigate to list")
+                    navController.navigate(HOME_ROUTE)
+                }
             )
         }
+
         composable(route = REGISTER_ROUTE) {
             RegisterScreen(
-                onClose = {
+                onLoginClick = navController::popBackStack,
+                onAuthenticationSuccessful = {
                     Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate("chat/${chatId}")
-                },
-                navController = navController
+                    navController.navigate(HOME_ROUTE)
+                }
             )
         }
-        composable(
-            route = "chat/{chatId}",
-            arguments = listOf(navArgument("chatId") { type = NavType.IntType })
-        ) {
-            HomeScreen(
-                chatId = chatId,
-                navigate = { chatId ->
-                    Util.chatId = chatId
-                    chatViewModel.selectChat(chatId)
-                    navController.navigate("chat/$chatId")
-                },
+
+        composable(route = HOME_ROUTE) {
+            val mainNavController: NavHostController = rememberNavController()
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
+            val coroutineScope = rememberCoroutineScope()
+            val drawerViewModel: DrawerViewModel = hiltViewModel()
+
+            MainBody(
+                viewModel = drawerViewModel,
+                drawerState = drawerState,
                 onNewChatClick = {
                     Util.chatId = 0
-                    navController.navigate("chat/0")
+                    mainNavController.navigate("${HOME_ROUTE}/chat/0")
                 },
-                onNewChatWithPdfClick = { path ->
+                onNewPdfChatClick = { path ->
                     Util.chatId = 0
                     Util.pdfPath = path
                     println("nav host " + Util.pdfPath)
-                    navController.navigate("chat/0")
+                    mainNavController.navigate("${HOME_ROUTE}/chat/0")
                 },
-                onLogoutClick = {
-                    myAppViewModel.logout()
+                onChatClick = { chatId ->
+                    coroutineScope.launch {
+                        drawerState.close()
+                    }
+                    Util.chatId = chatId
+                    mainNavController.navigate("${HOME_ROUTE}/chat/$chatId") {
+                        popUpTo("${HOME_ROUTE}/chat/0")
+                    }
+                },
+                onLogoutSuccessful = {
                     Util.chatId = 0
-                    navController.navigate(LOGIN_ROUTE)
+                    navController.navigate(LOGIN_ROUTE) {
+                        popUpTo(HOME_ROUTE) {
+                            inclusive = true
+                        }
+                    }
                 },
-                chatViewModel = chatViewModel
-            )
+            ) {
+                NavHost(
+                    navController = mainNavController,
+                    startDestination = "${HOME_ROUTE}/chat/{chatId}",
+                ) {
+                    composable(
+                        route = "home/chat/{chatId}",
+                        arguments = listOf(navArgument("chatId") {
+                            type = NavType.IntType
+                            defaultValue = 0
+                        })
+                    ) {
+                        ChatScreen2(
+                            onChatDeleted = {
+                                mainNavController.navigate("home/chat/0")
+                            },
+                            onMenuClick = {
+                                coroutineScope.launch {
+                                    drawerViewModel.refreshChats()
+                                    drawerState.open()
+                                }
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }

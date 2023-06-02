@@ -28,6 +28,7 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
+
     var uiState: LoginUiState by mutableStateOf(LoginUiState())
 
     fun login(username: String, password: String) {

@@ -17,6 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.university.androidchatbot.data.MessageType
+import com.university.androidchatbot.feature.chat.AuthorChatBubbleShape
+import com.university.androidchatbot.feature.chat.BotChatBubbleShape
+import com.university.androidchatbot.feature.chat.MessageItem
 import kotlinx.coroutines.delay
 
 @Composable

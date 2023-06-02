@@ -36,7 +36,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.university.androidchatbot.R
 import com.university.androidchatbot.ui.components.VerticalSpace
 import com.university.androidchatbot.LOGIN_ROUTE
@@ -45,8 +44,11 @@ import com.university.androidchatbot.feature.authentication.ui.login.TAG
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
-    val registerViewModel: RegisterViewModel = hiltViewModel()
+fun RegisterScreen(
+    registerViewModel: RegisterViewModel = hiltViewModel(),
+    onLoginClick: () -> Unit,
+    onAuthenticationSuccessful: () -> Unit,
+) {
     val registerUiState = registerViewModel.uiState
     val passwordVisibility = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
@@ -136,9 +138,7 @@ fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
         VerticalSpace(20.dp)
         Text(
             text = "Login Instead",
-            modifier = Modifier.clickable(onClick = {
-                navController.navigate(LOGIN_ROUTE)
-            })
+            modifier = Modifier.clickable(onClick = onLoginClick)
         )
         VerticalSpace(10.dp)
         if (registerUiState.isAuthenticating) {
@@ -156,7 +156,7 @@ fun RegisterScreen(onClose: () -> Unit, navController: NavController) {
     LaunchedEffect(registerUiState.authenticationCompleted) {
         Log.d(TAG, "Auth completed");
         if (registerUiState.authenticationCompleted) {
-            onClose();
+            onAuthenticationSuccessful();
         }
     }
 }

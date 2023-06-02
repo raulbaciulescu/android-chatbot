@@ -90,7 +90,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
     //navController
-    def nav_version = "2.5.3"
+    def nav_version = "2.5.2"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     //datastore

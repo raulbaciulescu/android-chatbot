@@ -35,57 +35,58 @@ import com.university.androidchatbot.data.Chat
 import com.university.androidchatbot.feature.chat.ChatViewModel
 import com.university.androidchatbot.utils.UriPathFinder
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 
-@Composable
-fun DrawerScreen(
-    chatViewModel: ChatViewModel,
-    onNewChatClick: () -> Unit,
-    onNewChatWithPdfClick: (String) -> Unit,
-    onLogoutClick: () -> Unit,
-    navigate: (chatId: Int) -> Unit,
-    application: Application
-) {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        DrawerHeader(
-            onNewChatClick = onNewChatClick,
-            onNewChatWithPdfClick = onNewChatWithPdfClick,
-            application = application
-        )
-        DrawerBody(
-            modifier = Modifier.fillMaxHeight(.85f),
-            viewModel = chatViewModel,
-            onItemClick = {
-                navigate(it.id)
-            }
-        )
-        Divider(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.White.copy(alpha = .3f)
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 30.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            IconTextButton(
-                modifier = Modifier.fillMaxWidth(.9f),
-                onClick = onLogoutClick,
-                text = "Logout",
-                painter = painterResource(R.drawable.ic_logout)
-            )
-        }
-    }
-}
+//@Composable
+//fun DrawerScreen(
+//    chatViewModel: ChatViewModel,
+//    onNewChatClick: () -> Unit,
+//    onNewChatWithPdfClick: (String) -> Unit,
+//    onLogoutClick: () -> Unit,
+//    navigate: (chatId: Int) -> Unit,
+//    application: Application
+//) {
+//    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+//        DrawerHeader(
+//            onNewChatClick = onNewChatClick,
+//            onNewChatWithPdfClick = onNewChatWithPdfClick,
+//            application = application
+//        )
+//        DrawerBody(
+//            modifier = Modifier.fillMaxHeight(.85f),
+//            viewModel = chatViewModel,
+//            onItemClick = {
+//                navigate(it.id)
+//            }
+//        )
+//        Divider(
+//            modifier = Modifier.fillMaxWidth(),
+//            color = Color.White.copy(alpha = .3f)
+//        )
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(vertical = 30.dp),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            IconTextButton(
+//                modifier = Modifier.fillMaxWidth(.9f),
+//                onClick = onLogoutClick,
+//                text = "Logout",
+//                painter = painterResource(R.drawable.ic_logout)
+//            )
+//        }
+//    }
+//}
 
 @Composable
 fun DrawerHeader(
     onNewChatClick: () -> Unit,
     onNewChatWithPdfClick: (String) -> Unit,
-    application: Application,
 ) {
     var showFilePicker by remember { mutableStateOf(false) }
     val uriPathFinder = UriPathFinder()
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -110,15 +111,13 @@ fun DrawerHeader(
             )
             FilePicker(show = showFilePicker, fileExtensions = listOf("pdf")) { path ->
                 showFilePicker = false
-                val myPath =
-                    uriPathFinder.handleUri(application.applicationContext, Uri.parse(path!!.path))
+                val myPath = uriPathFinder.handleUri(context, Uri.parse(path!!.path))
                 onNewChatWithPdfClick(myPath!!)
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerBody(
     modifier: Modifier = Modifier,

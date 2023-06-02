@@ -48,14 +48,21 @@ val TAG = "LoginScreen"
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    onClose: () -> Unit,
-    navController: NavController
+    onRegisterClick: () -> Unit,
+    onAuthenticationSuccessful: () -> Unit
 ) {
     val loginUiState = loginViewModel.uiState
     val passwordVisibility = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     var username by remember { mutableStateOf("raul@raul.com") }
     var password by remember { mutableStateOf("raul") }
+
+    LaunchedEffect(loginUiState.authenticationCompleted) {
+        Log.d(TAG, "Auth completed");
+        if (loginUiState.authenticationCompleted) {
+            onAuthenticationSuccessful();
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -121,9 +128,7 @@ fun LoginScreen(
         VerticalSpace(20.dp)
         Text(
             text = "Create An Account",
-            modifier = Modifier.clickable(onClick = {
-                navController.navigate(REGISTER_ROUTE)
-            })
+            modifier = Modifier.clickable(onClick = onRegisterClick)
         )
         VerticalSpace(20.dp)
         if (loginUiState.isAuthenticating) {
@@ -135,14 +140,10 @@ fun LoginScreen(
         }
         if (loginUiState.authenticationError != null) {
             println("Login failed ${loginUiState.authenticationError}")
-            Text(modifier = Modifier.fillMaxWidth(), text = "Login failed ${loginUiState.authenticationError}")
-        }
-    }
-
-    LaunchedEffect(loginUiState.authenticationCompleted) {
-        Log.d(TAG, "Auth completed");
-        if (loginUiState.authenticationCompleted) {
-            onClose();
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Login failed ${loginUiState.authenticationError}"
+            )
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.university.androidchatbot.ui.components
+package com.university.androidchatbot.feature.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,81 +25,81 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.R
 import com.university.androidchatbot.data.MessageType
-import com.university.androidchatbot.feature.chat.MessageViewModel
+import com.university.androidchatbot.ui.components.LoadingMessageItem
+import com.university.androidchatbot.ui.components.VerticalSpace
 import com.university.androidchatbot.utils.conditional
 
 val BotChatBubbleShape = RoundedCornerShape(0.dp, 20.dp, 20.dp, 20.dp)
 val AuthorChatBubbleShape = RoundedCornerShape(20.dp, 0.dp, 20.dp, 20.dp)
 
 @Composable
-fun ChatSection(
+fun MessagesSection(
     modifier: Modifier = Modifier,
-    messageViewModel: MessageViewModel = hiltViewModel(),
-    chatId: Int
+    state: ScreenState,
+    messageState: MessageState,
+    loadMoreMessages: () -> Unit
 ) {
     val listState = rememberLazyListState()
-    val state = messageViewModel.state
-    val messageState = messageViewModel.messageState
 
-    if (state.items.isEmpty())
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth(.8f)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.il_sign),
-                contentDescription = null
-            )
-            Text(
-                text = "Gepeto",
-                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
-                color = Color.White
-            )
-            VerticalSpace(size = 12.dp)
-            Text(
-//                modifier = Modifier.fillMaxWidth(0.8f),
-                text = "Bla bla lb albla safa",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
+//    if (state.items.isEmpty())
+//        Column(
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            modifier = Modifier.fillMaxWidth(.8f)
+//        ) {
+//            Image(
+//                painter = painterResource(R.drawable.il_sign),
+//                contentDescription = null
+//            )
+//            Text(
+//                text = "Gepeto",
+//                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
+//                color = Color.White
+//            )
+//            VerticalSpace(size = 12.dp)
+//            Text(
+////                modifier = Modifier.fillMaxWidth(0.8f),
+//                text = "Bla bla lb albla safa",
+//                style = MaterialTheme.typography.bodyLarge,
+//                color = Color.White,
+//                textAlign = TextAlign.Center
+//            )
+//        }
+//    else {
+    LazyColumn(
+        state = listState,
+        modifier = modifier.padding(horizontal = 16.dp),
+        reverseLayout = true
+    ) {
+        if (messageState.isLoading) {
+            item { LoadingMessageItem() }
         }
-    else {
-        LazyColumn(
-            state = listState,
-            modifier = modifier.padding(horizontal = 16.dp),
-            reverseLayout = true
-        ) {
-            if (messageState.isLoading) {
-                item { LoadingMessageItem() }
-            }
-            item {
-                if (state.isLoading) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+        item {
+            if (state.isLoading) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-            itemsIndexed(state.items) { index, message ->
-                if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
-                    messageViewModel.loadNextItems(chatId)
-                }
-                MessageItem(
-                    messageText = message.text,
-                    type = message.type,
-                    isLast = index == state.items.lastIndex
-                )
+        }
+        itemsIndexed(state.items) { index, message ->
+            // && state.items.size != 2
+            if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
+                loadMoreMessages()
             }
+            MessageItem(
+                messageText = message.text,
+                type = message.type,
+                isLast = index == state.items.lastIndex
+            )
         }
     }
+    //}
 
     LaunchedEffect(messageState.createMessage) {
         listState.scrollToItem(if (state.items.isNotEmpty()) 0 else 0)

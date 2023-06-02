@@ -17,18 +17,7 @@ import javax.inject.Inject
 import kotlin.streams.toList
 
 
-data class ScreenState(
-    val isLoading: Boolean = false,
-    val items: List<Message> = mutableStateListOf(),
-    val error: String? = null,
-    val endReached: Boolean = false,
-    val page: Int = 0
-)
 
-data class MessageState(
-    val isLoading: Boolean = false,
-    val createMessage: Int = 0
-)
 
 @HiltViewModel
 class MessageViewModel @Inject constructor(

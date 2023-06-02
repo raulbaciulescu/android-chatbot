@@ -31,7 +31,7 @@ import com.university.androidchatbot.R
 @Composable
 fun AppBar(
     chatTitle: String,
-    onNavigationIconClick: () -> Unit,
+    onMenuClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onUpdateClick: (String) -> Unit
 ) {
@@ -66,7 +66,7 @@ fun AppBar(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = onNavigationIconClick) {
+        IconButton(onClick = onMenuClick) {
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Toggle drawer"
