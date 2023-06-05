@@ -1,6 +1,5 @@
 package com.university.androidchatbot.feature.chat
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +20,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.university.androidchatbot.R
 import com.university.androidchatbot.data.MessageType
 import com.university.androidchatbot.ui.components.LoadingMessageItem
 import com.university.androidchatbot.ui.components.VerticalSpace
@@ -43,63 +40,58 @@ fun MessagesSection(
 ) {
     val listState = rememberLazyListState()
 
-//    if (state.items.isEmpty())
-//        Column(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier.fillMaxWidth(.8f)
-//        ) {
-//            Image(
-//                painter = painterResource(R.drawable.il_sign),
-//                contentDescription = null
-//            )
-//            Text(
-//                text = "Gepeto",
-//                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
-//                color = Color.White
-//            )
-//            VerticalSpace(size = 12.dp)
-//            Text(
-////                modifier = Modifier.fillMaxWidth(0.8f),
-//                text = "Bla bla lb albla safa",
-//                style = MaterialTheme.typography.bodyLarge,
-//                color = Color.White,
-//                textAlign = TextAlign.Center
-//            )
-//        }
-//    else {
-    LazyColumn(
-        state = listState,
-        modifier = modifier.padding(horizontal = 16.dp),
-        reverseLayout = true
-    ) {
-        if (messageState.isLoading) {
-            item { LoadingMessageItem() }
-        }
-        item {
-            if (state.isLoading) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        }
-        itemsIndexed(state.items) { index, message ->
-            // && state.items.size != 2
-            if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
-                loadMoreMessages()
-            }
-            MessageItem(
-                messageText = message.text,
-                type = message.type,
-                isLast = index == state.items.lastIndex
+    if (state.items.isEmpty())
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = "Gepeto",
+                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
+                color = Color.White
+            )
+            VerticalSpace(size = 12.dp)
+            Text(
+                text = "Write a new message below!",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White,
+                textAlign = TextAlign.Center
             )
         }
+    else {
+        LazyColumn(
+            state = listState,
+            modifier = modifier.padding(horizontal = 16.dp),
+            reverseLayout = true
+        ) {
+            if (messageState.isLoading) {
+                item { LoadingMessageItem() }
+            }
+            item {
+                if (state.isLoading) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+            itemsIndexed(state.items) { index, message ->
+                // && state.items.size != 2
+                if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
+                    loadMoreMessages()
+                }
+                MessageItem(
+                    messageText = message.text,
+                    type = message.type,
+                    isLast = index == state.items.lastIndex
+                )
+            }
+        }
     }
-    //}
 
     LaunchedEffect(messageState.createMessage) {
         listState.scrollToItem(if (state.items.isNotEmpty()) 0 else 0)

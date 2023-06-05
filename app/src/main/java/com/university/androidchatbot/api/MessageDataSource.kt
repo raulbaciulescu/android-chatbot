@@ -34,7 +34,7 @@ interface MessageApi {
     suspend fun getMessages(@Path("chatId") chatId: Int, @Path("page") page: Int): List<Message>
 
     @Multipart
-    @POST("/pdf-messages")
+    @POST("/messages/pdf")
     suspend fun saveMessageWithPdf(@Part text: MultipartBody.Part, @Part file: MultipartBody.Part): Message
 
     @Headers("Content-Type: application/json")

@@ -34,7 +34,7 @@ val Context.userPreferencesDataStore by preferencesDataStore(
 
 //const val IP = "192.168.0.129"
 //const val IP = "192.168.10.238"
-const val IP = "192.168.217.154"
+const val IP = "192.168.83.154"
 //const val IP = "192.168.100.24"
 //const val IP = "https://gepeto-java-backend-c3rsmdwhta-lm.a.run.app"
 

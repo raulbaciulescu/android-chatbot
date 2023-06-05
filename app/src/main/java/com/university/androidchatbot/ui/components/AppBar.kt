@@ -99,6 +99,17 @@ fun AppBar(
                     contentDescription = null
                 )
             }
+        } else {
+            IconButton(
+                modifier = Modifier.size(26.dp),
+                onClick = {
+                    state.show()
+                }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_pdf),
+                    contentDescription = null
+                )
+            }
         }
     }
 }
