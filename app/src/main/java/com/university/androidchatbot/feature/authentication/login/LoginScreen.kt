@@ -1,4 +1,4 @@
-package com.university.androidchatbot.feature.authentication.ui.login
+package com.university.androidchatbot.feature.authentication.login
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -54,8 +54,8 @@ fun LoginScreen(
     val loginUiState = loginViewModel.uiState
     val passwordVisibility = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
-    var username by remember { mutableStateOf("raul@raul.com") }
-    var password by remember { mutableStateOf("raul") }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     LaunchedEffect(loginUiState.authenticationCompleted) {
         Log.d(TAG, "Auth completed");

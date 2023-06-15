@@ -35,7 +35,7 @@ data class MessageState(
 )
 
 @HiltViewModel
-class ChatViewModel2 @Inject constructor(
+class ChatViewModel @Inject constructor(
     private val messageRepository: MessageRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -77,7 +77,9 @@ class ChatViewModel2 @Inject constructor(
         println("load more messages: " + chatId)
         if (chatId != 0) {
             viewModelScope.launch {
+                state.updateValue { it.copy(isLoading = true) }
                 paginator.loadNextItems(chatId)
+                state.updateValue { it.copy(isLoading = false) }
             }
         }
     }

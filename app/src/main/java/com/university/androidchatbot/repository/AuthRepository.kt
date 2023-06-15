@@ -1,4 +1,4 @@
-package com.university.androidchatbot.feature.authentication.api
+package com.university.androidchatbot.repository
 
 import com.university.androidchatbot.api.AuthDataSource
 import com.university.androidchatbot.data.TokenHolder

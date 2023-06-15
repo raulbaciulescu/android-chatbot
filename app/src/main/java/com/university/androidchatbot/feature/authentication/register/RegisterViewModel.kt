@@ -1,4 +1,4 @@
-package com.university.androidchatbot.feature.authentication.ui.register
+package com.university.androidchatbot.feature.authentication.register
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.google.api.pathtemplate.ValidationException
 import com.university.androidchatbot.data.dto.RegisterRequest
 import com.university.androidchatbot.data.UserPreferences
-import com.university.androidchatbot.feature.authentication.ui.login.LoginUiState
-import com.university.androidchatbot.feature.authentication.api.AuthRepository
+import com.university.androidchatbot.feature.authentication.login.LoginUiState
+import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.repository.UserPreferencesRepository
-import com.university.androidchatbot.feature.authentication.ui.login.TAG
+import com.university.androidchatbot.feature.authentication.login.TAG
 import com.university.androidchatbot.utils.ValidatorUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

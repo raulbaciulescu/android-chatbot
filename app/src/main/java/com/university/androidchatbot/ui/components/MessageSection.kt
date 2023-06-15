@@ -77,13 +77,11 @@ fun MessageSection(
                     if (timeOfRelease - timeOfTouch > 1400)
                         speechRecognitionViewModel.transcribe()
                     else {
-                        Toast
-                            .makeText(
-                                speechRecognitionViewModel.application.applicationContext,
-                                "Pressed shorter than 1 second",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        Toast.makeText(
+                            speechRecognitionViewModel.application.applicationContext,
+                            "Pressed shorter than 1 second",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             )

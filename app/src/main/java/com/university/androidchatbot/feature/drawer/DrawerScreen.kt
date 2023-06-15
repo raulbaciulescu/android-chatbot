@@ -35,7 +35,7 @@ import com.university.androidchatbot.ui.components.IconTextButton
 import com.university.androidchatbot.utils.UriPathFinder
 
 @Composable
-fun DrawerScreen2(
+fun DrawerScreen(
     viewModel: DrawerViewModel,
     onNewChatClick: () -> Unit,
     onNewPdfChatClick: (String) -> Unit,
@@ -114,18 +114,11 @@ fun DrawerHeader(
         contentAlignment = Alignment.Center
     ) {
         Column {
+            Text("Hi, Raul!", style = MaterialTheme.typography.titleMedium)
             IconTextButton(
                 modifier = Modifier.fillMaxWidth(.9f),
                 onClick = onNewChatClick,
                 text = "New chat",
-                painter = painterResource(R.drawable.ic_plus)
-            )
-            IconTextButton(
-                modifier = Modifier.fillMaxWidth(.9f),
-                onClick = {
-                    showFilePicker = true
-                },
-                text = "New chat with pdf",
                 painter = painterResource(R.drawable.ic_plus)
             )
             FilePicker(show = showFilePicker, fileExtensions = listOf("pdf")) { path ->

@@ -1,4 +1,4 @@
-package com.university.androidchatbot.feature.authentication.ui.login
+package com.university.androidchatbot.feature.authentication.login
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.api.pathtemplate.ValidationException
 import com.university.androidchatbot.data.dto.LoginRequest
-import com.university.androidchatbot.feature.authentication.api.AuthRepository
+import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.data.UserPreferences
 import com.university.androidchatbot.repository.UserPreferencesRepository
 import com.university.androidchatbot.utils.ValidatorUtil

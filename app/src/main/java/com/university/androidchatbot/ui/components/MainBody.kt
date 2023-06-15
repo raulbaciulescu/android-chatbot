@@ -9,7 +9,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.university.androidchatbot.feature.drawer.DrawerScreen2
+import com.university.androidchatbot.feature.drawer.DrawerScreen
 import com.university.androidchatbot.feature.drawer.DrawerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +33,7 @@ fun MainBody(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.fillMaxWidth(.8f)) {
-                DrawerScreen2(
+                DrawerScreen(
                     viewModel = viewModel,
                     onNewChatClick = onNewChatClick,
                     onNewPdfChatClick = onNewPdfChatClick,

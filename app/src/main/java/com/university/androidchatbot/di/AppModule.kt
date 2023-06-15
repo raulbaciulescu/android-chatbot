@@ -7,7 +7,7 @@ import com.darkrockstudios.libraries.mpfilepicker.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 //import com.university.androidchatbot.BuildConfig
-import com.university.androidchatbot.feature.authentication.api.AuthRepository
+import com.university.androidchatbot.repository.AuthRepository
 import com.university.androidchatbot.api.AuthApi
 import com.university.androidchatbot.api.AuthDataSource
 import com.university.androidchatbot.api.interceptors.TokenInterceptor
@@ -34,7 +34,7 @@ val Context.userPreferencesDataStore by preferencesDataStore(
 
 //const val IP = "192.168.0.129"
 //const val IP = "192.168.10.238"
-const val IP = "192.168.83.154"
+const val IP = "192.168.251.154"
 //const val IP = "192.168.100.24"
 //const val IP = "https://gepeto-java-backend-c3rsmdwhta-lm.a.run.app"
 

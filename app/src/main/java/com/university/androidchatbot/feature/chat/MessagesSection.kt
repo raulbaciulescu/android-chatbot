@@ -1,10 +1,16 @@
 package com.university.androidchatbot.feature.chat
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -20,9 +26,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.university.androidchatbot.R
 import com.university.androidchatbot.data.MessageType
 import com.university.androidchatbot.ui.components.LoadingMessageItem
 import com.university.androidchatbot.ui.components.VerticalSpace
@@ -39,26 +47,31 @@ fun MessagesSection(
     loadMoreMessages: () -> Unit
 ) {
     val listState = rememberLazyListState()
+    val isEmpty = state.items.isEmpty()
 
-    if (state.items.isEmpty())
+
+    if (state.items.isEmpty()) {
+        println("^^^^^^^^ is empty")
         Column(
+            modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Gepeto",
-                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold),
-                color = Color.White
+            Image(
+                modifier = Modifier.fillMaxWidth(.7f),
+                painter = painterResource(R.drawable.il_home),
+                contentDescription = null
             )
             VerticalSpace(size = 12.dp)
             Text(
-                text = "Write a new message below!",
-                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.fillMaxWidth(.6f),
+                text = "Write a new message or select an already existing conversation!",
+                style = MaterialTheme.typography.titleSmall,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
         }
-    else {
+    } else
         LazyColumn(
             state = listState,
             modifier = modifier.padding(horizontal = 16.dp),
@@ -80,7 +93,6 @@ fun MessagesSection(
                 }
             }
             itemsIndexed(state.items) { index, message ->
-                // && state.items.size != 2
                 if (index >= state.items.size - 1 && !state.endReached && !state.isLoading) {
                     loadMoreMessages()
                 }
@@ -91,7 +103,6 @@ fun MessagesSection(
                 )
             }
         }
-    }
 
     LaunchedEffect(messageState.createMessage) {
         listState.scrollToItem(if (state.items.isNotEmpty()) 0 else 0)

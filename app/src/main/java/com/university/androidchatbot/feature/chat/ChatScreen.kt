@@ -14,10 +14,11 @@ import com.university.androidchatbot.ui.components.MessageSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen2(
-    viewModel: ChatViewModel2 = hiltViewModel(),
+fun ChatScreen(
+    viewModel: ChatViewModel = hiltViewModel(),
     onMenuClick: () -> Unit,
-    onChatDeleted: () -> Unit
+    onChatDeleted: () -> Unit,
+    onNewPdfChatClick: (String) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val messageState = viewModel.messageState
@@ -42,7 +43,8 @@ fun ChatScreen2(
                 },
                 onUpdateClick = { chatTitle ->
                     viewModel.updateChat(chatTitle)
-                }
+                },
+                onNewPdfChatClick = onNewPdfChatClick,
             )
         },
         bottomBar = {

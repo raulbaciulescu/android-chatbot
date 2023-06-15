@@ -16,9 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.university.androidchatbot.feature.authentication.ui.login.LoginScreen
-import com.university.androidchatbot.feature.authentication.ui.register.RegisterScreen
-import com.university.androidchatbot.feature.chat.ChatScreen2
+import com.university.androidchatbot.feature.authentication.login.LoginScreen
+import com.university.androidchatbot.feature.authentication.register.RegisterScreen
+import com.university.androidchatbot.feature.chat.ChatScreen
 import com.university.androidchatbot.feature.drawer.DrawerViewModel
 import com.university.androidchatbot.feature.splash.SplashScreen
 import com.university.androidchatbot.utils.Util
@@ -127,7 +127,7 @@ fun NavigationHost() {
                             defaultValue = 0
                         })
                     ) {
-                        ChatScreen2(
+                        ChatScreen(
                             onChatDeleted = {
                                 mainNavController.navigate("home/chat/0")
                             },
@@ -136,6 +136,12 @@ fun NavigationHost() {
                                     drawerViewModel.refreshChats()
                                     drawerState.open()
                                 }
+                            },
+                            onNewPdfChatClick = { path ->
+                                Util.chatId = 0
+                                Util.pdfPath = path
+                                println("nav host " + Util.pdfPath)
+                                mainNavController.navigate("${HOME_ROUTE}/chat/0")
                             }
                         )
                     }

@@ -1,4 +1,4 @@
-package com.university.androidchatbot.feature.authentication.ui.register
+package com.university.androidchatbot.feature.authentication.register
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -38,8 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.university.androidchatbot.R
 import com.university.androidchatbot.ui.components.VerticalSpace
-import com.university.androidchatbot.LOGIN_ROUTE
-import com.university.androidchatbot.feature.authentication.ui.login.TAG
+import com.university.androidchatbot.feature.authentication.login.TAG
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -47,6 +47,7 @@ fun IconTextButton(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
+            HorizontalSpace(8.dp)
             Text(text, color = MaterialTheme.colorScheme.onBackground)
         }
     }
