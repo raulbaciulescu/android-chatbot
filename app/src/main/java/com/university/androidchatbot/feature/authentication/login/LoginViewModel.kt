@@ -39,12 +39,6 @@ class LoginViewModel @Inject constructor(
                 uiState = uiState.copy(isAuthenticating = true, authenticationError = null)
                 val result = authRepository.login(LoginRequest(username, password))
                 uiState = if (result.isSuccess) {
-                    userPreferencesRepository.save(
-                        UserPreferences(
-                            username,
-                            result.getOrNull()?.token ?: ""
-                        )
-                    )
                     uiState.copy(isAuthenticating = false, authenticationCompleted = true)
                 } else {
                     uiState.copy(

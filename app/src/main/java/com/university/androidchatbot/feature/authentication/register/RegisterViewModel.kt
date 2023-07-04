@@ -34,12 +34,6 @@ class RegisterViewModel @Inject constructor(
                 val result =
                     authRepository.register(RegisterRequest(firstName, lastName, email, password))
                 uiState = if (result.isSuccess) {
-                    userPreferencesRepository.save(
-                        UserPreferences(
-                            email,
-                            result.getOrNull()?.token ?: ""
-                        )
-                    )
                     uiState.copy(isAuthenticating = false, authenticationCompleted = true)
                 } else {
                     uiState.copy(

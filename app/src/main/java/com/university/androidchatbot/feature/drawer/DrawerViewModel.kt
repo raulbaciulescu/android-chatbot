@@ -11,6 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,5 +48,13 @@ class DrawerViewModel @Inject constructor(
         viewModelScope.launch {
             sessionManager.onUserLogOut()
         }
+    }
+
+    fun getLoggedFirstName(): String {
+        var firstName = ""
+        viewModelScope.launch {
+            firstName = sessionManager.firstName.first()
+        }
+        return firstName
     }
 }

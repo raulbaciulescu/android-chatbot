@@ -47,7 +47,8 @@ fun DrawerScreen(
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         DrawerHeader(
             onNewChatClick = onNewChatClick,
-            onNewChatWithPdfClick = onNewPdfChatClick
+            onNewChatWithPdfClick = onNewPdfChatClick,
+            loggedFirstName = viewModel.getLoggedFirstName()
         )
 
         LazyColumn(modifier = Modifier.fillMaxHeight(.85f)) {
@@ -102,6 +103,7 @@ fun DrawerScreen(
 fun DrawerHeader(
     onNewChatClick: () -> Unit,
     onNewChatWithPdfClick: (String) -> Unit,
+    loggedFirstName: String
 ) {
     var showFilePicker by remember { mutableStateOf(false) }
     val uriPathFinder = UriPathFinder()
@@ -114,7 +116,7 @@ fun DrawerHeader(
         contentAlignment = Alignment.Center
     ) {
         Column {
-            Text("Hi, Raul!", style = MaterialTheme.typography.titleMedium)
+            Text("Hi, $loggedFirstName!", style = MaterialTheme.typography.titleMedium)
             IconTextButton(
                 modifier = Modifier.fillMaxWidth(.9f),
                 onClick = onNewChatClick,

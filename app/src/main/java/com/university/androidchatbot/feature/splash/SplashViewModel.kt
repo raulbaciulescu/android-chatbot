@@ -39,6 +39,7 @@ class SessionManager @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
 ) {
     val token: Flow<String> = userPreferencesRepository.userPreferencesStream.map { it.token }
+    val firstName: Flow<String> = userPreferencesRepository.userPreferencesStream.map { it.username }
 
     suspend fun onUserLogin(username: String, token: String) {
         userPreferencesRepository.save(UserPreferences(username, token))
