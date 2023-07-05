@@ -32,11 +32,8 @@ val Context.userPreferencesDataStore by preferencesDataStore(
     name = "user_preferences"
 )
 
-//const val IP = "192.168.0.129"
-//const val IP = "192.168.10.238"
-//const val IP = "192.168.251.154"
-const val IP = "192.168.1.132"
-//const val IP = "https://gepeto-java-backend-c3rsmdwhta-lm.a.run.app"
+//const val IP = "http://192.168.1.130:8080/"
+const val IP = "https://chatbot-java-image-dhrw3xnvlq-lm.a.run.app"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,7 +42,8 @@ object AppModule {
     @Singleton
     fun provideAuthApi(okHttpClient: OkHttpClient, gsonFactory: GsonConverterFactory): AuthApi {
         return Retrofit.Builder()
-            .baseUrl("http://$IP:8080/")
+           // .baseUrl("http://$IP:8080/")
+            .baseUrl(IP)
             .client(okHttpClient)
             .addConverterFactory(gsonFactory)
             .build()
@@ -59,7 +57,7 @@ object AppModule {
         gsonFactory: GsonConverterFactory
     ): MessageApi {
         return Retrofit.Builder()
-            .baseUrl("http://$IP:8080/")
+            .baseUrl(IP)
             .client(okHttpClient)
             .addConverterFactory(gsonFactory)
             .build()
@@ -73,7 +71,7 @@ object AppModule {
         gsonFactory: GsonConverterFactory
     ): SpeechRecognitionApi {
         return Retrofit.Builder()
-            .baseUrl("http://$IP:8080/")
+            .baseUrl(IP)
             .client(okHttpClient)
             .addConverterFactory(gsonFactory)
             .build()
