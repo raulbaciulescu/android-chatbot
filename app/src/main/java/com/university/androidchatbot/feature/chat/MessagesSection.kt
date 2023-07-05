@@ -1,9 +1,14 @@
 package com.university.androidchatbot.feature.chat
 
+import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,34 +50,48 @@ fun MessagesSection(
     modifier: Modifier = Modifier,
     state: ScreenState,
     messageState: MessageState,
-    loadMoreMessages: () -> Unit
+    loadMoreMessages: () -> Unit,
+    clearError: () -> Unit
 ) {
     val listState = rememberLazyListState()
-    val isEmpty = state.items.isEmpty()
+    val context = LocalContext.current
 
-
-    if (state.items.isEmpty()) {
-        println("^^^^^^^^ is empty")
-        Column(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    if (state.isLoading) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                modifier = Modifier.fillMaxWidth(.7f),
-                painter = painterResource(R.drawable.il_home),
-                contentDescription = null
-            )
-            VerticalSpace(size = 12.dp)
-            Text(
-                modifier = Modifier.fillMaxWidth(.6f),
-                text = "Write a new message or select an already existing conversation!",
-                style = MaterialTheme.typography.titleSmall,
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
+            CircularProgressIndicator()
         }
-    } else
+    } else {
+        AnimatedVisibility(visible = state.items.isEmpty(), exit = fadeOut()) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxWidth(.7f),
+                    painter = painterResource(R.drawable.il_home),
+                    contentDescription = null
+                )
+                VerticalSpace(size = 12.dp)
+                Text(
+                    modifier = Modifier.fillMaxWidth(.6f),
+                    text = "Write a new message or select an already existing conversation!",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+    AnimatedVisibility(
+        visible = state.items.isNotEmpty(),
+        enter = fadeIn(animationSpec = tween(300))
+    ) {
         LazyColumn(
             state = listState,
             modifier = modifier.padding(horizontal = 16.dp),
@@ -103,9 +123,21 @@ fun MessagesSection(
                 )
             }
         }
+    }
 
     LaunchedEffect(messageState.createMessage) {
         listState.scrollToItem(if (state.items.isNotEmpty()) 0 else 0)
+    }
+
+    LaunchedEffect(state.error) {
+        state.error?.let {
+            Toast.makeText(
+                context,
+                "Something went wrong!",
+                Toast.LENGTH_SHORT
+            ).show()
+            clearError()
+        }
     }
 }
 

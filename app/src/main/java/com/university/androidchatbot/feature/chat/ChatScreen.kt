@@ -66,7 +66,8 @@ fun ChatScreen(
             ),
             state = state,
             messageState = messageState,
-            loadMoreMessages = viewModel::loadMoreMessages
+            loadMoreMessages = viewModel::loadMoreMessages,
+            clearError = viewModel::clearError
         )
     }
 }

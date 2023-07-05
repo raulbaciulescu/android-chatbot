@@ -47,12 +47,20 @@ interface MessageApi {
 }
 
 class MessageDataSource @Inject constructor(private val messageApi: MessageApi) {
-    suspend fun sendMessage(message: Message): Message {
-        return messageApi.saveMessage(message)
+    suspend fun sendMessage(message: Message): Result<Message> {
+        return try {
+            Result.success(messageApi.saveMessage(message))
+        } catch (ex: Exception) {
+            Result.failure(ex)
+        }
     }
 
-    suspend fun sendMessageWithPdf(message: MessageWithPdfRequest): Message {
-        return messageApi.saveMessageWithPdf(message.text, message.file)
+    suspend fun sendMessageWithPdf(message: MessageWithPdfRequest): Result<Message> {
+        return try {
+            Result.success(messageApi.saveMessageWithPdf(message.text, message.file))
+        } catch (ex: Exception) {
+            Result.failure(ex)
+        }
     }
 
     suspend fun getMessages(chatId: Int): List<Message> {

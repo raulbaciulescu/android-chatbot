@@ -26,7 +26,8 @@ data class ScreenState(
     val error: String? = null,
     val endReached: Boolean = false,
     val page: Int = 0,
-    val chatTitle: String = ""
+    val chatTitle: String = "",
+    val chatId: Int? = null
 )
 
 data class MessageState(
@@ -74,7 +75,6 @@ class ChatViewModel @Inject constructor(
     }
 
     fun loadMoreMessages() {
-        println("load more messages: " + chatId)
         if (chatId != 0) {
             viewModelScope.launch {
                 state.updateValue { it.copy(isLoading = true) }
@@ -92,16 +92,36 @@ class ChatViewModel @Inject constructor(
                 items = listOf(message) + state.value.items,
             )
         }
-        messageState = messageState.copy(isLoading = true, createMessage = messageState.createMessage + 1)
+        messageState = messageState.copy(
+            isLoading = true,
+            createMessage = messageState.createMessage + 1
+        )
         viewModelScope.launch {
-            receivedMessage = messageRepository.sendMessage(message)
-            chatId = receivedMessage.chatId
-            messageState = messageState.copy(isLoading = false, createMessage = messageState.createMessage + 1)
+            val result = messageRepository.sendMessage(message)
+            if (result.isSuccess) {
+                receivedMessage = result.getOrNull()!!
+                chatId = receivedMessage.chatId
+                messageState = messageState.copy(
+                    isLoading = false,
+                    createMessage = messageState.createMessage + 1
+                )
 
-            state.updateValue {
-                it.copy(
-                    items = listOf(receivedMessage) + state.value.items.stream()
-                        .map { item -> item.copy(chatId = chatId) }.toList(),
+                state.updateValue {
+                    it.copy(
+                        items = listOf(receivedMessage) + state.value.items.stream()
+                            .map { item -> item.copy(chatId = chatId) }.toList(),
+                        chatId = receivedMessage.chatId,
+                        chatTitle = "New chat",
+                    )
+                }
+            } else {
+                state.updateValue {
+                    it.copy(
+                        error = result.exceptionOrNull()?.message
+                    )
+                }
+                messageState = messageState.copy(
+                    isLoading = false,
                 )
             }
         }
@@ -115,23 +135,46 @@ class ChatViewModel @Inject constructor(
                 items = listOf(message) + state.value.items,
             )
         }
-        messageState = messageState.copy(isLoading = true, createMessage = messageState.createMessage + 1)
+        messageState = messageState.copy(
+            isLoading = true,
+            createMessage = messageState.createMessage + 1
+        )
         viewModelScope.launch {
-            receivedMessage = messageRepository.sendMessageWithPdf(message, path)
-            chatId = receivedMessage.chatId
-            messageState = messageState.copy(isLoading = false, createMessage = messageState.createMessage + 1)
-            state.updateValue {
-                it.copy(
-                    items = listOf(receivedMessage) + state.value.items.stream()
-                        .map { item -> item.copy(chatId = chatId) }.toList(),
+            val result = messageRepository.sendMessageWithPdf(message, path)
+            if (result.isSuccess) {
+                receivedMessage = result.getOrNull()!!
+                chatId = receivedMessage.chatId
+                messageState = messageState.copy(
+                    isLoading = false,
+                    createMessage = messageState.createMessage + 1
                 )
+                state.updateValue {
+                    it.copy(
+                        items = listOf(receivedMessage) + state.value.items.stream()
+                            .map { item -> item.copy(chatId = chatId) }.toList(),
+                    )
+                }
+            } else {
+                state.updateValue {
+                    it.copy(
+                        error = result.exceptionOrNull()?.message
+                    )
+                }
             }
+        }
+    }
+
+    fun clearError() {
+        state.updateValue {
+            it.copy(
+                error = null
+            )
         }
     }
 
     fun deleteChat() {
         viewModelScope.launch {
-            messageRepository.deleteChat(Util.chatId)
+            messageRepository.deleteChat(chatId)
             state.updateValue { it.copy(isDeleted = true) }
         }
     }
@@ -139,14 +182,14 @@ class ChatViewModel @Inject constructor(
     fun updateChat(chatTitle: String) {
         viewModelScope.launch {
             state.updateValue { it.copy(chatTitle = chatTitle) }
-            messageRepository.updateChat(chatTitle)
+            messageRepository.updateChat(chatTitle, chatId)
         }
     }
 
     private fun loadChat() {
-        println("load chat: " + chatId)
         viewModelScope.launch {
-            val newChatTitle =  messageRepository.getChats().firstOrNull { it.id == chatId }?.title ?: ""
+            val newChatTitle =
+                messageRepository.getChats().firstOrNull { it.id == chatId }?.title ?: ""
             state.updateValue {
                 it.copy(
                     chatTitle = newChatTitle

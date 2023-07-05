@@ -35,7 +35,7 @@ val Context.userPreferencesDataStore by preferencesDataStore(
 //const val IP = "192.168.0.129"
 //const val IP = "192.168.10.238"
 //const val IP = "192.168.251.154"
-const val IP = "192.168.0.129"
+const val IP = "192.168.1.132"
 //const val IP = "https://gepeto-java-backend-c3rsmdwhta-lm.a.run.app"
 
 @Module
@@ -146,11 +146,12 @@ object AppModule {
                 this.addInterceptor(tokenInterceptor)
             }
             .apply {
-                if (BuildConfig.DEBUG) {
-                    val interceptor = HttpLoggingInterceptor()
-                    interceptor.level = HttpLoggingInterceptor.Level.BODY
-                    addInterceptor(interceptor)
-                }
+//                if (BuildConfig.DEBUG) {
+//
+//                }
+                val interceptor = HttpLoggingInterceptor()
+                interceptor.level = HttpLoggingInterceptor.Level.BODY
+                addInterceptor(interceptor)
             }
             .build()
     }
